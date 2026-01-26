@@ -44,6 +44,13 @@ extract_parameters: |
 
 # Expected output example
 value_expectation:
-  field: cfo_ir_sensitivity
-  value: 
-    value: "The correlation between operating cash flow and interest rates is high due to ..."
+  value:
+    value: "str"
+    summary: "str"
+  text_source:
+    text: "str"
+    chunk_document: "str"
+    chunk_id: "str"
+    chunk_page: []
+  synonyms_found: []
+  justification: "str"

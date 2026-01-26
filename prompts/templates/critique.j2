@@ -30,6 +30,16 @@ You will receive a JSON extraction for a specific financial field with the follo
   "justification": "str"
 }
 ```
+
+And also the chunks used as evidence for the extraction:
+
+`text: … | chunk_id: … | chunk_page: … | chunk_document: …`
+
+- **text**: the content of the retrieved fragment.  
+- **chunk_id**: unique identifier of the fragment.  
+- **chunk_page**: the page reference(s) in the source document where the fragment appears (one or more pages).
+- **chunk_document**: identifier of the source document.
+
 ## Input fields
 
 - **field**: Fixed identifier of the attribute being reported.
@@ -59,6 +69,13 @@ Do not use external knowledge, assumptions, or unstated inferences.
 - **Area**: {{ area | default("N/A") }}
 - **Operational definition**: {{ operational_definition | default("N/A") }}
 
+
+{# =========================
+
+  START QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
+
+======================== #}
+{% if template_type == "quantitative" %}
 ### Field rules
 Below are the rules that were specified during the field extraction process. They are included to provide a baseline for comparison in the present audit exercise.
 
@@ -69,8 +86,20 @@ Below are the rules that were specified during the field extraction process. The
 #### Exclusions
 
 > {{ field_constraints.exclusions | default("N/A") | trim | replace('\n', '\n> ') }}
+{% endif %}
+{# =========================
+
+  END QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
+
+======================== #}
 
 
+{# =========================
+
+  START QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
+
+======================== #}
+{% if template_type == "quantitative" %}
 ## Audit stages
 
 ### Alignment with the field's operational definition
@@ -93,22 +122,49 @@ Confirm that the extracted content is directly supported by evidence in `text_so
 - Verify that each atomic element of `value` (number, unit, currency, key label, table row, etc.) is explicitly stated in the 
   cited text or is a direct, safe, and transparent transformation (e.g., formatting normalization) of what is stated.
 - If any material part of `value` is not supported by the cited chunks, mark invalid.
+{% else %}
+## Audit stages
+
+### Alignment with the field's operational definition
+- Verify that `value` (the synthesized text) conforms **exactly** to the field's operational definition, **without adding or omitting any required information**.
+- Confirm that the scope, level of detail, and required format (if applicable) match what the definition specifies.
+
+### Traceability: Extracted data must be supported by the cited chunks
+- Ensure that all extracted content is **directly supported** by evidence in `text_source` and its referenced components.
+
+**Rules:**
+- **Validate** that **every factual element** in `value` (e.g., specific data points, claims, issues, dates, quantities, numbers, metrics) is **explicitly stated** in the cited text, or derives from it via a **direct, conservative, and clearly defensible** inference.
+- If **any** factual element in `value` is **not** supported by the cited chunks, **mark the output as invalid**.
+{% endif %}
+{# =========================
+
+  END QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
+
+
+======================== #}
+
+**Invalidity rule:** If any of the three checks fails materially, set `is_valid=false`.
 
 **Important:** Do not treat `synonyms_found` or the extractor's `justification` as evidence. Use them only as secondary context. 
 The primary evidence is the cited chunk text.
 
-## Decision and output
+## Language and output format
+{% if (output_language | default("es")) == "es" %}
+- Always respond in **Spanish (ES)**.
+{% else %}
+- Always respond in **English (US)**.
+{% endif %}
+- Use a formal, technical, and executive tone.
+- Return the response exclusively in **JSON format**.
 
-Return only a valid JSON object with:
+## Output size constraint
+- Ensure the `justification` does not exceed {{ max_words | default("150") }} words. **Prioritize data, facts, and concrete figures**; do not include unfounded narratives.
 
-- `field`: the field_name
-- `is_valid`: true or false
-- `confidence`: number between 0 and 1
-- `justification`: brief but specific explanation referencing the three checks (what you verified and what passed/failed).
-
-**Invalidity rule:** If any of the three checks fails materially, set `is_valid=false`.
-
-## Output contract:
+## Expected output:
 ```json
-{{ output_contract | default("N/A") | tojson }}
+  {
+    "is_valid": bool,     // true if the extraction is valid, false otherwise
+    "confidence": float,  // confidence level between 0 and 1
+    "justification": str  // brief explanation referencing the check points
+  }
 ```

@@ -1,3 +1,4 @@
+
 {% set user_type = user_type | default("extract") %}
 
 {% if user_type == "extract"%}
@@ -6,6 +7,7 @@ Please extract the required information from the following excerpts, and follow 
 {{ chunks | default("N/A") }}
 
 {% endif %}
+
 
 {% if user_type == "critique"%}
 Please validate the following model-extracted output:
@@ -18,9 +20,18 @@ For reference, the excerpts (chunks) used to produce the extraction are included
 
 {% endif %}
 
+
 {% if user_type == "evaluate"%}
 Please evaluate the stated premise using the provided fields. Follow the instructions and the expected output format exactly.
 
 {{ history | default("N/A") }}
+
+{% endif %}
+
+
+{% if user_type == "summarize"%}
+Please provide a concise summary of the following content, focusing on the key points and main ideas:
+
+{{ content | default("N/A") }}
 
 {% endif %}

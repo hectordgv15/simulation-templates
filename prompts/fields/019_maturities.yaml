@@ -75,6 +75,13 @@ value_expectation:
     Other financial liabilities: [...]
     Financial derivatives: [...]
     Lease liabilities: [...]
+  text_source:
+    text: ""
+    chunk_document: ""
+    chunk_id: ""
+    chunk_page: []
+  synonyms_found: []
+  justification: ""
 
 
 
