@@ -1,0 +1,26 @@
+{% set user_type = user_type | default("extract") %}
+
+{% if user_type == "extract"%}
+Please extract the required information from the following excerpts, and follow all instructions accurately:
+
+{{ chunks | default("N/A") }}
+
+{% endif %}
+
+{% if user_type == "critique"%}
+Please validate the following model-extracted output:
+
+{{ extraction | default("N/A") }}
+
+For reference, the excerpts (chunks) used to produce the extraction are included below:
+
+{{ chunks | default("N/A") }}
+
+{% endif %}
+
+{% if user_type == "evaluate"%}
+Please evaluate the stated premise using the provided fields. Follow the instructions and the expected output format exactly.
+
+{{ history | default("N/A") }}
+
+{% endif %}

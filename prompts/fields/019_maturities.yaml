@@ -1,0 +1,81 @@
+field_name: Debt maturity schedule
+field_id: "019"
+field_alias: debt_maturity_schedule
+area: Liquidity / refinancing risk associated with debt
+
+operational_definition: |
+  Structured schedule of debt maturities at period-end, detailing outstanding nominal/principal amounts
+  allocated to explicit maturity years (e.g., 2026, 2027, …), with disaggregation by whatever breakdown
+  the report discloses (e.g., instrument/type, and when available counterparty/lender and/or currency).
+
+retrieval_keywords: |
+  maturity schedule, debt maturity, maturities of debt, debt repayment schedule, principal repayments,
+  contractual maturities, loans and borrowings maturities, debt due in, maturity profile, redemption profile
+
+sources:
+  primary: |
+    - Notes to the financial statements; Loans and borrowings / Financial debt (maturity profile)
+    - Notes; Liquidity risk management (maturity analysis of financial liabilities)
+    - Notes; Capital management / Financing (debt breakdown by instrument and maturity)
+    - Management report; Liquidity / refinancing risk and debt maturities
+
+  secondary: |
+    - Statement of financial position; Current/non-current borrowings (supporting classification)
+    - Debt footnote appendices (bond terms, loan schedules, maturity dates)
+    - Note on covenant / facilities (RCF expiry, term loan maturity)
+    - IFRS 7 / financial instruments note (if it includes a table of maturities)
+
+synonyms: |
+  - debt maturity table
+  - schedule of maturities
+  - maturity profile of borrowings
+  - contractual maturity schedule (debt)
+  - tabla/calendario de vencimientos de deuda
+
+field_constraints:
+  specifications: |
+    - Extract the debt maturity schedule as of the reporting period-end, prioritizing nominal amounts / outstanding principal.
+    - Record maturities by explicit calendar year (YYYY), using only the breakdown dimensions that are actually presented in the relevant table/section.
+      Typical (optional) dimensions may include:
+        - instrument name/type (e.g., "Senior Notes 2028", "Term Loan", "RCF drawdown")
+        - counterparty / lender / issuer class (e.g., bank, syndicate, bondholders)
+        - debt category/label as disclosed (e.g., "Bonds and notes", "Loans") when the disclosure is at category level
+    - Do not require all dimensions. Extract using only the labels available in the disclosure:
+      - If the table presents totals by year only, use a single label such as "Total debt" (or the closest disclosed equivalent).
+    - If the table is a matrix (rows = breakdown items, columns = years):
+      - Create one record for each (breakdown item(s), year) combination with an amount > 0.
+      - If multiple dimensions are shown concurrently (e.g., instrument + currency), prioritize the instrument dimension.
+    - If currency is not specified per row but is clearly stated for the entire table/section, apply it to all records.
+    - If no currency is disclosed, leave the currency field blank/null; do not infer.
+    - If both "contractual cash flows" and "principal/nominal" are presented, prioritize principal/nominal.
+    - Include totals only when explicitly disclosed (e.g., "Total debt maturities"); do not compute missing totals.
+
+
+  exclusions: |
+    - Trade payables, provisions, pensions, tax liabilities, and other operating/non-financing liabilities not classified as debt.
+    - Derivatives (fair value amounts, hedge balances, and notional amounts), unless the disclosure explicitly presents them as debt principal/nominal.
+    - Interest expense, coupon/interest payment schedules, and amortised cost movements (e.g., premiums/discounts, transaction costs, EIR unwind), unless the table explicitly states the figures represent outstanding principal/nominal.
+    - Maturity buckets that are not mapped to explicit calendar years; no conversion to years via assumptions or approximations.
+    - "Net debt" figures or reconciliations that offset debt with cash, unless they provide an explicit debt maturity schedule by calendar year.
+
+value_expectation:
+  field: maturities
+  value:
+    Bonds and notes:
+      - year: 2025
+        debt:
+          value: 155000
+          unit: EUR
+      - year: 2026
+        debt:
+          value: 110000
+          unit: EUR
+    Loans: [...]
+    Bank debt: [...]
+    Other financial liabilities: [...]
+    Financial derivatives: [...]
+    Lease liabilities: [...]
+
+
+
+

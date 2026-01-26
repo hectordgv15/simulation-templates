@@ -1,0 +1,49 @@
+field_name: Sensitivity of operating cash flow to interest rates
+field_id: "063"
+field_alias: cfo_ir_sensitivity
+area: Corporate Finance / Financial Risks
+
+operational_definition: |
+  Sensitivity of operating cash flow (CFO) to changes in interest rates. This includes both direct sensitivity
+  (e.g., regulated or contractual revenues that adjust through indices linked to inflation/rates; tariff review
+  mechanisms; regulated remuneration referenced to sovereign yield curves) and indirect sensitivity
+  (e.g., correlation between nominal rates and inflation that triggers price indexation; changes in demand/volumes;
+  working-capital effects through collections/payments; and variations in indexed operating costs or costs with
+  pass-through mechanisms).
+
+retrieval_keywords: |
+  sensibilidad a tipos de interés, impacto de los tipos en caja, sensibilidad del flujo de caja operativo,
+  sensibilidad a la inflación (IPC/IPCA/HICP), ingresos regulados sensibles a tipos, capital circulante (working capital) sensible a tipos
+
+
+sources:
+  primary: |
+    - Annual Report (Liquidity and Capital Resources; Cash Flows; Working Capital) and "Risk Factors / Market Risk".
+    - Annual Report (Notes) — Note on Financial Instruments & Risk Management: "Interest rate risk", "Market risk sensitivity", "Hedging / cash flow hedges".
+    - Regulatory filings / tariff determinations — "Allowed return (Regulatory WACC)", "Indexation formula (CPI/HICP)", "Tariff reset / true-up (ex post) mechanisms".
+
+  secondary: |
+    - Investor presentation / Capital Markets Day deck — "Guidance/Outlook" and "Sensitivities (rates/inflation)" slides.
+    - Earnings call transcript — Management commentary and Q&A on "inflation indexation/pass-through", "demand/volume outlook", and "working-capital dynamics".
+    - Credit rating agency report or lender information package — "Cash flow resilience", "Liquidity", and "Interest rate/inflation exposure" sections.
+
+extract_parameters: |
+    - **Published sensitivities and scenarios:** change in CFO (or CFO components) under rate and/or inflation shocks
+      (e.g., ±100 bps, ±1% CPI), including horizon and units.
+    - **Indexation mechanisms:** CPI/HICP (or other indices), formula (if disclosed), frequency (monthly/quarterly/annual),
+      lag (e.g., 12-month delay), caps/floors, and true-up/regularization mechanisms (ex post adjustment).
+    - **Regulatory framework:** explicit references to curves/yields, regulated WACC methodology, periodic reviews,
+      parameters and dates, and how this flows through to revenues/cash receipts.
+    - **Demand/volume channel:** demand elasticity or volume/consumption changes attributed to the rate environment
+      (only where the text explicitly links the two).
+    - **Working capital:** DSO/DPO, delinquencies, inventories, collateral/margins, and any quantified sensitivity or
+      statements linking rates or inflation to these items.
+    - **Indexed operating costs:** material cost lines with indexation or pass-through (e.g., supply contracts), with
+      evidence of formula/index/frequency where available.
+    - **Asymmetries/thresholds:** rules such as "up to X%", "above Y", bands, regulatory limits, or contractual step-ups.
+
+# Expected output example
+value_expectation:
+  field: cfo_ir_sensitivity
+  value: 
+    value: "The correlation between operating cash flow and interest rates is high due to ..."

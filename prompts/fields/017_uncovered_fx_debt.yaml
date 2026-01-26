@@ -1,0 +1,80 @@
+field_name: Uncovered foreign-currency debt
+field_id: "017"
+field_alias: uncovered_fx_debt
+area: Foreign-exchange risk associated with debt
+operational_definition: |
+  Nominal amount of debt denominated in a foreign currency that remains unhedged at the end of the period, due to the
+  absence of contractual hedges or natural offsets, determining the company's net exposure to exchange-rate movements.
+retrieval_keywords: |
+  uncovered foreign currency debt, unhedged foreign currency debt, foreign currency borrowings not hedged,
+  unhedged FX debt, net unhedged foreign currency debt exposure, foreign currency loans without hedging
+
+sources:
+  primary: |
+    - Notes to the financial statements; Financial risk management (foreign-exchange risk / market risk)
+    - Notes to the financial statements; Financial instruments and hedging (derivatives, hedge accounting)
+    - Notes to the financial statements; Financial debt / Loans and borrowings (currency breakdown)
+    - Management report; Financial risks (FX exposure and hedging policies)
+
+  secondary: |
+    - Statement of financial position; Financial liabilities (debt classification)
+    - Appendix / Note on maturities and FX sensitivity (foreign-currency exposure tables)
+    - Note on foreign-currency commitments and contingencies (if it quantifies unhedged debt)
+
+synonyms: |
+  - unhedged foreign currency debt
+  - uncovered foreign currency debt
+  - foreign-currency debt not hedged
+  - unhedged FX borrowings
+  - net unhedged FX debt exposure
+
+field_constraints: 
+  specifications: |
+    - Extract only the amount explicitly identified as "uncovered", "unhedged", or "without hedging" foreign-currency debt.
+    - Accept an amount presented as "net exposure" only if the text expressly defines it as unhedged debt (not as an overall
+      net position).
+    - If the document reports unhedged debt by currency and also provides a total, extract the explicit total unhedged debt.
+    - If the amount appears within an FX risk table, extract the row/column referring to "debt" and "uncovered/unhedged",
+      not other exposures.
+    - Report only the total unhedged/uncovered foreign-currency debt for the period-end. Do not extract intermediate figures.
+
+  exclusions: |
+    - Do not include functional-currency debt, nor foreign-currency debt hedged by derivatives, forward exchange contracts,
+      FX swaps, options, insurance, or explicitly indicated natural hedging.
+    - Do not include derivative amounts (fair value, hedging notional) unless they are identified as unhedged debt.
+    - Do not include exposure related to foreign-currency assets, trade receivables/payables, cash/treasury balances, or a
+      general "net position" if it is not debt.
+    - Do not include sensitivity analyses (P&L/equity impact from exchange-rate changes) or stress-testing scenarios.
+    - Do not include limits, policies, hedge ratios/percentages, or ranges; only the monetary amount of unhedged debt.
+
+# Expected output example
+value_expectation:
+    field: 017_uncovered_fx_debt
+    value:
+      unit: EUR|USD|MXN|COP|etc.
+      value: 54000000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

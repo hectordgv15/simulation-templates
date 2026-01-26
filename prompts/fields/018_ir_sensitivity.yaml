@@ -1,0 +1,61 @@
+field_name: Interest rate sensitivity
+field_id: "018"
+field_alias: ir_sensitivity
+area: Interest-rate risk associated with debt
+
+operational_definition: |
+  Quantitative interest-rate sensitivity comprised of:
+    - The positive rate increase applied in the sensitivity analysis (X%).
+    - The associated monetary impact on profit or loss (P&L) resulting from that increase.
+
+retrieval_keywords: |
+  interest rate sensitivity, interest rate sensitivity analysis, interest rate variation, impact on profit or loss,
+  effect on the income statement, P&L impact, net interest margin sensitivity, net interest margin sensitivity,
+  basis points, bps, rate increase, interest rate shock, interest rate risk sensitivity, sensitivity analysis, 
+  increase in interest rates, impact on profit or loss
+
+sources:
+  primary: |
+    - Notes to the financial statements; Financial risk management / Market risk (interest rate risk)
+    - Notes to the financial statements; Sensitivities / Sensitivity analysis (tables showing +X bps / +Y% and the related impact)
+    - Notes to the financial statements; Financial instruments (interest rate exposure and sensitivity, where P&L impact is quantified)
+    - Management report / MD&A; Financial risks (quantification of interest-rate sensitivity in profit or loss)
+  secondary: |
+    - Accounting policies or risk management note (shock methodology and assumptions, where P&L amounts are provided)
+    - Risk appendices / market risk tables (where P&L vs. equity/OCI is clearly separated)
+    - Hedging note (where the P&L impact is presented explicitly)
+
+synonyms: |
+  - interest rate sensitivity (profit or loss)
+  - interest rate sensitivity analysis (P&L)
+  - impact on the income statement from an increase in interest rates
+  - interest rate shock (+bps / +%)
+  - sensibilidad al tipo de interés (resultado)
+  - análisis de sensibilidad de tipos (P&L)
+  - impacto en la cuenta de resultados por subida de tipos
+  - shock de tipos de interés (+pbs / +%)
+
+field_constraints:
+  specifications: |
+    - Always extract two linked components: the positive rate shock applied (+X bps or +Y%) and the monetary impact on profit or loss (P&L) resulting from that shock.
+    - Prioritize the positive increase scenario ("up", "increase"). If +/- or up/down are disclosed, select the "up" scenario.
+    - If multiple positive scenarios are disclosed (e.g., +50 bps and +100 bps), select the standard or primary scenario reported (typically the first one or the one explicitly described as the base scenario in the sensitivity analysis).
+    - If results are disclosed by portfolios/currencies and an explicit consolidated total for P&L is provided, extract the consolidated total.
+    - Accept "net interest income (NII) impact" only where the document explicitly presents it as an effect on profit or loss.
+
+  exclusions: |
+    - Any impact on equity and/or other comprehensive income (equity, OCI, FVOCI, reserves, "other comprehensive income").
+    - Sensitivity/impact on fair value recognized in equity (where it is not identified as P&L).
+    - Complex macro stress tests or non-comparable scenarios where the effect is not expressed as a simple +X bps or +Y% shock.
+    - Non-monetary metrics or items without a direct profit or loss effect: VaR, duration, gap, EVE/EV, limits, policies, hedge ratios, ranges.
+    - Derivative amounts (fair value or notional) unless explicitly identified as the P&L impact of the shock.
+
+value_expectation:
+  field: ir_sensitivity
+  value:
+    ir_stress_value:
+      unit: "%"
+      value: 25
+    ir_stress_pl:
+      currency: "EUR|USD|MXN|COP|etc."
+      value: -21000000
