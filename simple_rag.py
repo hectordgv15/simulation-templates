@@ -66,7 +66,7 @@ def retrieval_with_answer(field_info     = None,
     extract_prompt = PromptOrchestrator.get_prompt(
         "extract",
         **field_info,
-        template_type          = field_type,
+        field_type          = field_type,
         output_language        = "es",
         max_words              = 500,
         include_source_guides  = True

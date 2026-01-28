@@ -15,7 +15,7 @@ from jinja2 import (
 
 class PromptOrchestrator:
     """
-    Manages Jinja2 prompt templates stored as `.j2` files with frontmatter.
+    Manages Jinja2 prompt templates.
 
     Features:
     - Loads template content from a configured templates directory.
@@ -47,7 +47,7 @@ class PromptOrchestrator:
     @staticmethod
     def _load_post(template_name: str) -> frontmatter.Post:
         """
-        Load a `.j2` template and return a `frontmatter.Post` object (content + metadata).
+        Load a `.j2` template and return a `frontmatter.Post` object (content, metadata).
 
         Args:
             template_name: Template name without extension.
@@ -84,7 +84,7 @@ class PromptOrchestrator:
             ValueError: If Jinja2 raises a rendering error.
         """
         env = PromptOrchestrator._get_env()
-        post = PromptOrchestrator._load_post(template_name)
+        post = PromptOrchestrator._load_post(template_name) 
 
         jinja_template = env.from_string(post.content)
 

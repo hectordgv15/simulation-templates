@@ -1,5 +1,5 @@
 question: "17"
-title: "Strategic planning process"
+title: "Strategic Planning Process"
 scoring_levels: 5
 regulatory_context: |
   This assessment evaluates the strength of the strategic planning process, focusing on how clearly it is defined, how effectively 
@@ -38,19 +38,19 @@ premises:
       **Strategic action plan**: The company defines specific and detailed initiatives aimed at achieving 
       its strategic objectives.
 
-score_guideline: |
-  **1.0**:
+score_guideline:
+  1.0:
     - Formal processes are used for strategic planning;
     - Evidence of strategic plans that contain specific financial and operational goals with clear measures of achievement.
-  **3.0**:
+  3.0:
     - Formal processes are used for strategic planning;
     - Evidence of strategic plans that contain specific financial and operational goals but measures of achievement may be less explicit.
-  **5.0**:
+  5.0:
     - Processes for strategic planning are satisfactory in line with industry norms;
     - Strategic aspects lack depth or specific financial/operational goals; achievement measures are unclear.
-  **7.5**:
+  7.5:
     - Very limited evidence that strategic plans exist, or plans are superficial.
-  **10.0**:
+  10.0:
     - Strategy appears non-existent or superficial;
       OR
     - The management has an inconsistent ad-hoc style

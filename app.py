@@ -159,7 +159,7 @@
 # extract_quantitative = PromptOrchestrator.get_prompt(
 #     "extract",
 #     **table_field,
-#     template_type="quantitative",
+#     field_type="quantitative",
 #     output_language=output_language,
 #     max_words=mw_extract_quant,
 #     include_specifications=include_specifications,
@@ -170,7 +170,7 @@
 # critique_quantitative = PromptOrchestrator.get_prompt(
 #     "critique",
 #     **table_field,
-#     template_type="quantitative",
+#     field_type="quantitative",
 #     output_language=output_language,
 #     max_words=mw_crit_quant,
 # )
@@ -178,7 +178,7 @@
 # extract_qualitative = PromptOrchestrator.get_prompt(
 #     "extract",
 #     **macro_field,
-#     template_type="qualitative",
+#     field_type="qualitative",
 #     output_language=output_language,
 #     max_words=mw_extract_qual,
 #     include_source_guides=include_source_guides,
@@ -187,7 +187,7 @@
 # critique_qualitative = PromptOrchestrator.get_prompt(
 #     "critique",
 #     **macro_field,
-#     template_type="qualitative",
+#     field_type="qualitative",
 #     output_language=output_language,
 #     max_words=mw_crit_qual,
 # )
@@ -595,7 +595,7 @@ def build_prompt(selected_name: str, max_words, output_language: str):
         return PromptOrchestrator.get_prompt(
             "extract",
             **table_field,
-            template_type="quantitative",
+            field_type="quantitative",
             output_language=output_language,
             max_words=max_words,
             include_specifications=include_specifications,
@@ -607,7 +607,7 @@ def build_prompt(selected_name: str, max_words, output_language: str):
         return PromptOrchestrator.get_prompt(
             "critique",
             **table_field,
-            template_type="quantitative",
+            field_type="quantitative",
             output_language=output_language,
             max_words=max_words,
         )
@@ -616,7 +616,7 @@ def build_prompt(selected_name: str, max_words, output_language: str):
         return PromptOrchestrator.get_prompt(
             "extract",
             **macro_field,
-            template_type="qualitative",
+            field_type="qualitative",
             output_language=output_language,
             max_words=max_words,
             include_source_guides=include_source_guides,
@@ -626,7 +626,7 @@ def build_prompt(selected_name: str, max_words, output_language: str):
         return PromptOrchestrator.get_prompt(
             "critique",
             **macro_field,
-            template_type="qualitative",
+            field_type="qualitative",
             output_language=output_language,
             max_words=max_words,
         )

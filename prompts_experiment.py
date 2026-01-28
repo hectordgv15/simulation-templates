@@ -18,60 +18,69 @@ evaluation_info = load_yaml(Path(base_premises) / "question_17.yaml")
 # Quantitative fields
 # -------------------------------------------------------------------------------------------------------------------
 extract_quantitative = PromptOrchestrator.get_prompt(
-    "extract",
+    "extraction/extract",
     **table_field, 
-    template_type          = "quantitative", 
+    field_type          = "quantitative", 
     output_language        = "es", 
-    max_words              = None, 
+    max_characters         = None, 
     include_specifications = True, 
     include_exclusions     = True, 
     include_source_guides  = True,
     )
 
 critique_quantitative = PromptOrchestrator.get_prompt(
-    "critique",
+    "extraction/critique",
     **table_field,
-    template_type   = "quantitative",
+    field_type   = "quantitative",
     output_language = "es",
-    max_words       = 150,
+    max_characters  = 1000,
     )
 
 
 # Qualitative Prompts
 # -------------------------------------------------------------------------------------------------------------------
 extract_qualitative = PromptOrchestrator.get_prompt(
-    "extract",
+    "extraction/extract",
     **macro_field,
-    template_type          = "qualitative",
+    field_type          = "qualitative",
     output_language        = "es",
-    max_words              = 500,
+    max_characters         = 5000,
     include_source_guides  = True
     )
 
 
 critique_qualitative = PromptOrchestrator.get_prompt(
-    "critique",
+    "extraction/critique",
     **macro_field,
-    template_type   = "qualitative",
+    field_type   = "qualitative",
     output_language = "es",
-    max_words       = 150,
+    max_characters  = 1000,
     )
 
 
-
 # Evaluation Prompt
+# -------------------------------------------------------------------------------------------------------------------
 evaluation_prompt = PromptOrchestrator.get_prompt(
-    "evaluate",
+    "evaluation/evaluate",
     **evaluation_info,
     premise_id      = "strategic_planning",
     output_language = "es",
+    max_characters  = 1000,
+    )
+
+
+consolidate_prompt = PromptOrchestrator.get_prompt(
+    "evaluation/consolidate",
+    **evaluation_info,
+    output_language = "es",
+    max_characters  = 2000,
     )
 
 
 # Summary Prompt
 # -------------------------------------------------------------------------------------------------------------------
 summary_prompt = PromptOrchestrator.get_prompt(
-    "summarize",
+    "utils/summarize",
     include_judgment = True,
-    max_words        = 150,
+    max_characters   = 1000,
     )
