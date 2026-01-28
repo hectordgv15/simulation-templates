@@ -46,7 +46,6 @@ extract_parameters: |
 value_expectation:
   value:
     value: "str"
-    summary: "str"
   text_source:
     text: "str"
     chunk_document: "str"

@@ -8,7 +8,7 @@ def load_yaml(path):
 
 # Load configurations and prompts
 base_fields = "prompts/fields"
-base_premises = "prompts/premises"
+base_premises = "prompts/subfactors"
 
 # Field Definitions
 table_field = load_yaml(Path(base_fields) /  "019_maturities.yaml")
@@ -36,6 +36,12 @@ critique_quantitative = PromptOrchestrator.get_prompt(
     max_characters  = 1000,
     )
 
+summary_prompt = PromptOrchestrator.get_prompt(
+    "extraction/summarize",
+    include_judgment = True,
+    max_characters   = 1000,
+    )
+
 
 # Qualitative Prompts
 # -------------------------------------------------------------------------------------------------------------------
@@ -57,6 +63,12 @@ critique_qualitative = PromptOrchestrator.get_prompt(
     max_characters  = 1000,
     )
 
+summary_prompt = PromptOrchestrator.get_prompt(
+    "extraction/summarize",
+    include_judgment = True,
+    max_characters   = 1000,
+    )
+
 
 # Evaluation Prompt
 # -------------------------------------------------------------------------------------------------------------------
@@ -76,11 +88,9 @@ consolidate_prompt = PromptOrchestrator.get_prompt(
     max_characters  = 2000,
     )
 
-
-# Summary Prompt
+# User Prompt
 # -------------------------------------------------------------------------------------------------------------------
 summary_prompt = PromptOrchestrator.get_prompt(
-    "utils/summarize",
-    include_judgment = True,
-    max_characters   = 1000,
+    "common/user",
+    user_type = "extract",
     )
