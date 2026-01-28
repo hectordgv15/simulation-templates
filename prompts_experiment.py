@@ -20,20 +20,24 @@ evaluation_info = load_yaml(Path(base_premises) / "question_17.yaml")
 extract_quantitative = PromptOrchestrator.get_prompt(
     "extraction/extract",
     **table_field, 
-    field_type          = "quantitative", 
+    field_type             = "quantitative", 
     output_language        = "es", 
     max_characters         = None, 
     include_specifications = True, 
-    include_exclusions     = True, 
+    include_exclusions     = True,
+    include_synonyms       = True,
     include_source_guides  = True,
+    include_normalization  = True
     )
 
 critique_quantitative = PromptOrchestrator.get_prompt(
     "extraction/critique",
     **table_field,
-    field_type   = "quantitative",
-    output_language = "es",
-    max_characters  = 1000,
+    field_type             = "quantitative",
+    output_language        = "es",
+    max_characters         = 1000,
+    include_specifications = True,
+    include_exclusions     = True,
     )
 
 summary_prompt = PromptOrchestrator.get_prompt(
@@ -41,24 +45,25 @@ summary_prompt = PromptOrchestrator.get_prompt(
     include_judgment = True,
     max_characters   = 1000,
     )
-
 
 # Qualitative Prompts
 # -------------------------------------------------------------------------------------------------------------------
 extract_qualitative = PromptOrchestrator.get_prompt(
     "extraction/extract",
     **macro_field,
-    field_type          = "qualitative",
-    output_language        = "es",
-    max_characters         = 5000,
-    include_source_guides  = True
+    field_type                  = "qualitative",
+    output_language             = "es",
+    max_characters              = 5000,
+    include_source_guides       = True,
+    include_extraction_elements = True,
+    include_traceability_rule   = True,
+    include_coverage_rule       = True,
     )
-
 
 critique_qualitative = PromptOrchestrator.get_prompt(
     "extraction/critique",
     **macro_field,
-    field_type   = "qualitative",
+    field_type      = "qualitative",
     output_language = "es",
     max_characters  = 1000,
     )
@@ -68,7 +73,6 @@ summary_prompt = PromptOrchestrator.get_prompt(
     include_judgment = True,
     max_characters   = 1000,
     )
-
 
 # Evaluation Prompt
 # -------------------------------------------------------------------------------------------------------------------
@@ -79,7 +83,6 @@ evaluation_prompt = PromptOrchestrator.get_prompt(
     output_language = "es",
     max_characters  = 1000,
     )
-
 
 consolidate_prompt = PromptOrchestrator.get_prompt(
     "evaluation/consolidate",
@@ -92,5 +95,5 @@ consolidate_prompt = PromptOrchestrator.get_prompt(
 # -------------------------------------------------------------------------------------------------------------------
 summary_prompt = PromptOrchestrator.get_prompt(
     "common/user",
-    user_type = "extract",
+    user_type = "extract", # options: extract, critique, evaluate, summarize, consolidate
     )

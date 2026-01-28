@@ -26,18 +26,6 @@ You will receive a JSON extraction for a specific financial field with the follo
   "justification": "str"
 }
 ```
-
-And also the chunks used as evidence for the extraction:
-
-`text: … | chunk_id: … | chunk_page: … | chunk_document: …`
-
-- **text**: the content of the retrieved fragment.  
-- **chunk_id**: unique identifier of the fragment.  
-- **chunk_page**: the page reference(s) in the source document where the fragment appears (one or more pages).
-- **chunk_document**: identifier of the source document.
-
-## Input fields
-
 - **field**: Fixed identifier of the attribute being reported.
 - **value**: Dictionary containing the extracted values for the attribute (internal structure may vary by field).
 - **text_source**: Evidence and traceability metadata for the extraction:
@@ -48,13 +36,20 @@ And also the chunks used as evidence for the extraction:
 - **synonyms_found**: List of equivalent terms/synonyms detected during extraction.
 - **justification**: Extractor-provided rationale for the extracted values (methods/criteria used).
 
-You will also be provided with the field's operational definition, specifications, and exclusions.
+Evidence for the extraction is provided as chunks in the following format:
+
+`text: … | chunk_id: … | chunk_page: … | chunk_document: …`
+
+- **text**: the content of the retrieved fragment.  
+- **chunk_id**: unique identifier of the fragment.  
+- **chunk_page**: the page reference(s) in the source document where the fragment appears (one or more pages).
+- **chunk_document**: identifier of the source document.
 
 ## Task
 Validate whether the extraction is correct for the given financial field using only:
 
 - the field definition/specifications/exclusions provided below, and
-- the cited chunks in `text_source` as evidence.
+- the text chunks as evidence.
 
 Do not use external knowledge, assumptions, or unstated inferences.
 
@@ -65,24 +60,31 @@ Do not use external knowledge, assumptions, or unstated inferences.
 - **Area**: {{ area | default("N/A") }}
 - **Operational definition**: {{ operational_definition | default("N/A") }}
 
-
 {# =========================
 
   START QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
 
 ======================== #}
 {% if field_type == "quantitative" %}
+{% if include_specifications | default(true) or include_exclusions | default(true) %}
 ### Field rules
 Below are the rules that were specified during the field extraction process. They are included to provide a baseline for comparison in the present audit exercise.
+{% endif %}
 
+{% if include_specifications | default(true)%}
 #### Specifications
 
 > {{ field_constraints.specifications | default("N/A") | trim | replace('\n', '\n> ') }}
+{% endif %}
 
+{% if include_exclusions | default(true)%}
 #### Exclusions
 
 > {{ field_constraints.exclusions | default("N/A") | trim | replace('\n', '\n> ') }}
 {% endif %}
+
+{% endif %}
+
 {# =========================
 
   END QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
@@ -104,20 +106,30 @@ Below are the rules that were specified during the field extraction process. The
 - If the type/structure is inconsistent (e.g., an amount is expected but only qualitative text is provided), mark invalid.
 - If the definition requires units/currency/%/sign conventions, validate that they are present and internally consistent.
 
+{% if include_specifications | default(true) and include_exclusions | default(true) %}
 ### Compliance with specifications and exclusions
+{% elif include_specifications | default(true) or include_exclusions | default(true) %}
+### Compliance with field constraints
+{% endif %}
 
+{% if include_specifications | default(true) and include_exclusions | default(true) %}
 - Confirm that the content of `value` meets the Specifications and does not violate the Exclusions.
+{% elif include_specifications | default(true) %}
+- Confirm that the content of `value` meets the Specifications.
+{% elif include_exclusions | default(true) %}
+- Confirm that the content of `value` does not violate the Exclusions.
+{% endif %}
 - If `value` includes anything explicitly excluded (even if the rest is correct), mark invalid.
 - If mandatory requirements are missing (e.g., period, unit, consolidated vs. standalone basis, scope, etc.), mark invalid.
 
-### Traceability: the extracted data must be supported by the cited chunks
+### Traceability: the extracted data must be supported by the chunks
 
-Confirm that the extracted content is directly supported by evidence in `text_source` and its components.
+Confirm that the extracted content is directly supported by evidence (chunks) and its components.
 
 **Rules:**
 - Verify that each atomic element of `value` (number, unit, currency, key label, table row, etc.) is explicitly stated in the 
-  cited text or is a direct, safe, and transparent transformation (e.g., formatting normalization) of what is stated.
-- If any material part of `value` is not supported by the cited chunks, mark invalid.
+  chunks or is a direct, safe, and transparent transformation (e.g., formatting normalization) of what is stated.
+- If any material part of `value` is not supported by the chunks, mark invalid.
 {% else %}
 ## Audit stages
 
@@ -125,12 +137,12 @@ Confirm that the extracted content is directly supported by evidence in `text_so
 - Verify that `value` (the synthesized text) conforms **exactly** to the field's operational definition, **without adding or omitting any required information**.
 - Confirm that the scope, level of detail, and required format (if applicable) match what the definition specifies.
 
-### Traceability: Extracted data must be supported by the cited chunks
-- Ensure that all extracted content is **directly supported** by evidence in `text_source` and its referenced components.
+### Traceability: Extracted data must be supported by the chunks
+- Ensure that all extracted content is **directly supported** by evidence (chunks) and its referenced components.
 
 **Rules:**
-- **Validate** that **every factual element** in `value` (e.g., specific data points, claims, issues, dates, quantities, numbers, metrics) is **explicitly stated** in the cited text, or derives from it via a **direct, conservative, and clearly defensible** inference.
-- If **any** factual element in `value` is **not** supported by the cited chunks, **mark the output as invalid**.
+- **Validate** that **every factual element** in `value` (e.g., specific data points, claims, issues, dates, quantities, numbers, metrics) is **explicitly stated** in the text chunks, or derives from it via a **direct, conservative, and clearly defensible** inference.
+- If **any** factual element in `value` is **not** supported by the chunks, **mark the output as invalid**.
 {% endif %}
 {# =========================
 
@@ -139,10 +151,10 @@ Confirm that the extracted content is directly supported by evidence in `text_so
 
 ======================== #}
 
-**Invalidity rule:** If any of the three checks fails materially, set `is_valid=false`.
+**Invalidity rule:** If any of the checks fails materially, set `is_valid=false`.
 
 **Important:** Do not treat `synonyms_found` or the extractor's `justification` as evidence. Use them only as secondary context. 
-The primary evidence is the cited chunk text.
+The primary evidence is the chunk text.
 
 ## Language and output format
 {% if (output_language | default("es")) == "es" %}

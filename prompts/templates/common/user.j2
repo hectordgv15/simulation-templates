@@ -8,7 +8,7 @@ model: gpt-4.1
 {% set user_type = user_type | default("extract") %}
 
 {% if user_type == "extract"%}
-Please extract the required information from the following excerpts, and follow all instructions accurately:
+Extract the required information from the following excerpts and follow all instructions accurately:
 
 {{ chunks | default("N/A") }}
 
@@ -16,7 +16,7 @@ Please extract the required information from the following excerpts, and follow 
 
 
 {% if user_type == "critique"%}
-Please validate the following model-extracted output:
+Validate the following model-extracted output:
 
 {{ extraction | default("N/A") }}
 
@@ -28,7 +28,15 @@ For reference, the excerpts (chunks) used to produce the extraction are included
 
 
 {% if user_type == "evaluate"%}
-Please evaluate the stated premise using the provided fields. Follow the instructions and the expected output format exactly.
+Evaluate the stated premise using the provided fields. Follow the instructions and the expected output format exactly.
+
+{{ history | default("N/A") }}
+
+{% endif %}
+
+
+{% if user_type == "consolidate"%}
+Taking into account the evaluated premises, consolidate them into a final assessment. Follow the instructions and the expected output format strictly and exactly.
 
 {{ history | default("N/A") }}
 
@@ -36,7 +44,7 @@ Please evaluate the stated premise using the provided fields. Follow the instruc
 
 
 {% if user_type == "summarize"%}
-Please provide a concise summary of the following content, focusing on the key points and main ideas:
+Provide a concise summary of the following content, focusing on the key points and main ideas:
 
 {{ content | default("N/A") }}
 

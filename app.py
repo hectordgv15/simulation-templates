@@ -6,9 +6,8 @@ from pathlib import Path
 from prompts.prompts_engine import PromptOrchestrator
 
 
-# ----------------------------
 # Utilities
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 @st.cache_data(show_spinner=False)
 def load_yaml(path: Path):
     return yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -161,9 +160,8 @@ def call_get_prompt(template_path: str, **kwargs):
         raise
 
 
-# ----------------------------
 # App configuration
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 st.set_page_config(page_title="Prompt Viewer", layout="wide")
 
 st.markdown(
@@ -185,43 +183,27 @@ st.markdown(
         --sb-text: #0b2a6b;
       }
 
-      /* Layout */
       .block-container { max-width: 1250px; padding-top: 1.25rem; padding-bottom: 2.25rem; }
       header[data-testid="stHeader"] { height: 0.35rem; }
 
-      /* Sidebar: professional blue tone */
       section[data-testid="stSidebar"] {
         border-right: 1px solid var(--sb-border);
         background: linear-gradient(180deg, var(--sb-bg-top) 0%, var(--sb-bg-mid) 55%, var(--sb-bg-bottom) 100%);
       }
       [data-testid="stSidebar"] .block-container { padding-top: 1.1rem; }
 
-      /* Sidebar typography */
       [data-testid="stSidebar"] h1,
       [data-testid="stSidebar"] h2,
       [data-testid="stSidebar"] h3 {
         color: var(--sb-text);
         letter-spacing: -0.01em;
       }
-      [data-testid="stSidebar"] p,
-      [data-testid="stSidebar"] span,
-      [data-testid="stSidebar"] label,
-      [data-testid="stSidebar"] small {
-        color: #0f172a;
-      }
-      [data-testid="stSidebar"] .stCaption {
-        color: #27467b !important;
-      }
+      [data-testid="stSidebar"] .stCaption { color: #27467b !important; }
 
-      /* Widgets */
-      .stButton button {
-        border-radius: 12px !important;
-        padding: 0.55rem 0.85rem !important;
-      }
+      .stButton button { border-radius: 12px !important; padding: 0.55rem 0.85rem !important; }
       .stSelectbox div[data-baseweb="select"] > div { border-radius: 12px; }
       .stCheckbox { padding: 0.2rem 0; }
 
-      /* Sidebar widget labels with blue emphasis */
       [data-testid="stSidebar"] .stSelectbox label,
       [data-testid="stSidebar"] .stTextInput label,
       [data-testid="stSidebar"] .stCheckbox label {
@@ -229,34 +211,18 @@ st.markdown(
         font-weight: 600;
       }
 
-      /* Sidebar expanders: subtle blue card */
       [data-testid="stSidebar"] details {
         border: 1px solid var(--sb-border);
         border-radius: 14px;
         background: rgba(29, 78, 216, 0.035);
         padding: 6px 10px;
       }
-      [data-testid="stSidebar"] details summary {
-        color: var(--sb-text);
-        font-weight: 650;
-      }
+      [data-testid="stSidebar"] details summary { color: var(--sb-text); font-weight: 650; }
 
-      /* Tabs */
-      .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
-        border-bottom: 1px solid var(--border);
-      }
-      .stTabs [data-baseweb="tab"] {
-        border-radius: 12px 12px 0 0;
-        padding: 10px 12px;
-      }
-      .stTabs [aria-selected="true"] {
-        background: white;
-        border: 1px solid var(--border);
-        border-bottom: 0;
-      }
+      .stTabs [data-baseweb="tab-list"] { gap: 6px; border-bottom: 1px solid var(--border); }
+      .stTabs [data-baseweb="tab"] { border-radius: 12px 12px 0 0; padding: 10px 12px; }
+      .stTabs [aria-selected="true"] { background: white; border: 1px solid var(--border); border-bottom: 0; }
 
-      /* Cards / hero */
       .hero {
         border: 1px solid var(--border);
         background: linear-gradient(135deg, #f7f7ff 0%, #ffffff 40%, #f3fbff 100%);
@@ -265,18 +231,8 @@ st.markdown(
         margin-bottom: 14px;
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
       }
-      .hero-title {
-        font-size: 1.55rem;
-        font-weight: 750;
-        color: var(--text);
-        letter-spacing: -0.02em;
-        margin-bottom: 4px;
-      }
-      .hero-subtitle {
-        color: var(--muted);
-        font-size: 0.98rem;
-        margin-bottom: 10px;
-      }
+      .hero-title { font-size: 1.55rem; font-weight: 750; color: var(--text); letter-spacing: -0.02em; margin-bottom: 4px; }
+      .hero-subtitle { color: var(--muted); font-size: 0.98rem; margin-bottom: 10px; }
       .chip {
         display: inline-block;
         border: 1px solid var(--border);
@@ -295,28 +251,19 @@ st.markdown(
         padding: 14px 14px 10px 14px;
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
       }
-      .card-title {
-        font-weight: 700;
-        color: var(--text);
-        margin-bottom: 6px;
-      }
-      .card-note {
-        color: var(--muted);
-        font-size: 0.92rem;
-      }
+      .card-title { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+      .card-note { color: var(--muted); font-size: 0.92rem; }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 
-# ----------------------------
 # Paths / YAML
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parent
 base_fields = ROOT / "prompts" / "fields"
 
-# Prefer prompts/subfactors; fall back to prompts/premises if needed
 premises_candidates = [ROOT / "prompts" / "subfactors", ROOT / "prompts" / "premises"]
 base_premises = next((p for p in premises_candidates if p.exists()), premises_candidates[0])
 
@@ -334,9 +281,8 @@ macro_field = load_yaml(macro_field_path)
 evaluation_info = load_yaml(evaluation_info_path)
 
 
-# ----------------------------
 # Template & parameter model
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 TEMPLATE_OPTIONS = [
     "Extract",
     "Critique",
@@ -350,37 +296,57 @@ FIELD_TYPE_OPTIONS = ["quantitative", "qualitative"]
 MAX_CHARS_OPTIONS = [None, 300, 500, 800, 1000, 1500, 2000, 3000, 5000, 8000, 12000]
 
 DEFAULTS = {
+    # Extract (Quantitative)
     "Extract__quantitative": dict(
         output_language="es",
         max_characters=None,
         include_specifications=True,
         include_exclusions=True,
+        include_synonyms=True,
         include_source_guides=True,
+        include_normalization=True,
     ),
+    # Extract (Qualitative)
     "Extract__qualitative": dict(
         output_language="es",
         max_characters=5000,
         include_source_guides=True,
+        include_extraction_elements=True,
+        include_traceability_rule=True,
+        include_coverage_rule=True,
     ),
-    "Critique__quantitative": dict(output_language="es", max_characters=1000),
+
+    # Critique (Quantitative)
+    "Critique__quantitative": dict(
+        output_language="es",
+        max_characters=1000,
+        include_specifications=True,
+        include_exclusions=True,
+    ),
+
+    # Critique (Qualitative)
     "Critique__qualitative": dict(output_language="es", max_characters=1000),
+
+    # Summarize
     "Summarize": dict(include_judgment=True, max_characters=1000),
+
+    # Evaluation
     "Evaluate": dict(premise_id="strategic_planning", output_language="es", max_characters=1000),
     "Consolidate": dict(output_language="es", max_characters=2000),
+
+    # User prompt
     "User • Common": dict(user_type="extract"),
 }
 
 
-# ----------------------------
 # Session initialization
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 if "selected_template" not in st.session_state:
     st.session_state["selected_template"] = TEMPLATE_OPTIONS[0]
 
 
-# ----------------------------
 # Sidebar
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 with st.sidebar:
     st.subheader("Configuration")
 
@@ -403,7 +369,7 @@ with st.sidebar:
             "Field type",
             options=FIELD_TYPE_OPTIONS,
             key=ft_key,
-            help="Select quantitative vs qualitative. This also determines which YAML field definition is used.",
+            help="Select quantitative vs qualitative. This determines which YAML definition is applied.",
         )
         selected_field_type = st.session_state[ft_key]
 
@@ -413,10 +379,12 @@ with st.sidebar:
     st.divider()
     st.caption("Parameters (applies only to the current selection)")
 
+    # output_language
     if selected_template in ("Extract", "Critique", "Evaluate", "Consolidate"):
         k = ensure_state(scope, "output_language", scope_defaults.get("output_language", "es"))
         st.selectbox("Output language", options=["es", "en"], key=k)
 
+    # max_characters
     if selected_template in ("Extract", "Critique", "Summarize", "Evaluate", "Consolidate"):
         k = ensure_state(scope, "max_characters", scope_defaults.get("max_characters", None))
         st.selectbox(
@@ -424,10 +392,11 @@ with st.sidebar:
             options=MAX_CHARS_OPTIONS,
             key=k,
             format_func=lambda x: "No limit" if x is None else str(x),
-            help="Character limit, aligned with the script.",
+            help="Character limit (as in the script).",
         )
 
     with st.expander("Advanced options", expanded=False):
+        # Extract flags
         if selected_template == "Extract":
             if selected_field_type == "quantitative":
                 k = ensure_state(scope, "include_specifications", scope_defaults.get("include_specifications", True))
@@ -436,23 +405,49 @@ with st.sidebar:
                 k = ensure_state(scope, "include_exclusions", scope_defaults.get("include_exclusions", True))
                 st.checkbox("include_exclusions", key=k)
 
+                k = ensure_state(scope, "include_synonyms", scope_defaults.get("include_synonyms", True))
+                st.checkbox("include_synonyms", key=k)
+
                 k = ensure_state(scope, "include_source_guides", scope_defaults.get("include_source_guides", True))
                 st.checkbox("include_source_guides", key=k)
+
+                k = ensure_state(scope, "include_normalization", scope_defaults.get("include_normalization", True))
+                st.checkbox("include_normalization", key=k)
             else:
                 k = ensure_state(scope, "include_source_guides", scope_defaults.get("include_source_guides", True))
                 st.checkbox("include_source_guides", key=k)
 
+                k = ensure_state(scope, "include_extraction_elements", scope_defaults.get("include_extraction_elements", True))
+                st.checkbox("include_extraction_elements", key=k)
+
+                k = ensure_state(scope, "include_traceability_rule", scope_defaults.get("include_traceability_rule", True))
+                st.checkbox("include_traceability_rule", key=k)
+
+                k = ensure_state(scope, "include_coverage_rule", scope_defaults.get("include_coverage_rule", True))
+                st.checkbox("include_coverage_rule", key=k)
+
+
+        if selected_template == "Critique" and selected_field_type == "quantitative":
+            k = ensure_state(scope, "include_specifications", scope_defaults.get("include_specifications", True))
+            st.checkbox("include_specifications", key=k)
+
+            k = ensure_state(scope, "include_exclusions", scope_defaults.get("include_exclusions", True))
+            st.checkbox("include_exclusions", key=k)
+
+        # Summarize
         if selected_template == "Summarize":
             k = ensure_state(scope, "include_judgment", scope_defaults.get("include_judgment", True))
             st.checkbox("include_judgment", key=k)
 
+        # Evaluate
         if selected_template == "Evaluate":
             k = ensure_state(scope, "premise_id", scope_defaults.get("premise_id", "strategic_planning"))
             st.text_input("premise_id", key=k)
 
+        # User prompt
         if selected_template == "User • Common":
             k = ensure_state(scope, "user_type", scope_defaults.get("user_type", "extract"))
-            st.text_input("user_type", key=k)
+            st.selectbox("user_type", options=["extract", "critique", "evaluate"], key=k)
 
 
 def get_params(scope: str, param_names: list[str]) -> dict:
@@ -463,48 +458,82 @@ def get_params(scope: str, param_names: list[str]) -> dict:
     return out
 
 
-# ----------------------------
 # Prompt build
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 def build_prompt(template_name: str, field_type: str | None) -> tuple[str, dict]:
     scope = scope_key(template_name, field_type)
 
     if template_name == "Extract":
+        if field_type == "quantitative":
+            params = get_params(
+                scope,
+                [
+                    "output_language",
+                    "max_characters",
+                    "include_specifications",
+                    "include_exclusions",
+                    "include_synonyms",
+                    "include_source_guides",
+                    "include_normalization",
+                ],
+            )
+            kwargs = {
+                **table_field,
+                "field_type": "quantitative",
+                "output_language": params.get("output_language"),
+                "max_characters": params.get("max_characters"),
+                "include_specifications": params.get("include_specifications", True),
+                "include_exclusions": params.get("include_exclusions", True),
+                "include_synonyms": params.get("include_synonyms", True),
+                "include_source_guides": params.get("include_source_guides", True),
+                "include_normalization": params.get("include_normalization", True),
+            }
+            return call_get_prompt("extraction/extract", **kwargs), kwargs
+
         params = get_params(
             scope,
-            ["output_language", "max_characters", "include_specifications", "include_exclusions", "include_source_guides"],
+            [
+                "output_language",
+                "max_characters",
+                "include_source_guides",
+                "include_extraction_elements",
+                "include_traceability_rule",
+                "include_coverage_rule",
+            ],
         )
-        base = table_field if field_type == "quantitative" else macro_field
         kwargs = {
-            **base,
-            "field_type": field_type,
+            **macro_field,
+            "field_type": "qualitative",
             "output_language": params.get("output_language"),
             "max_characters": params.get("max_characters"),
+            "include_source_guides": params.get("include_source_guides", True),
+            "include_extraction_elements": params.get("include_extraction_elements", True),
+            "include_traceability_rule": params.get("include_traceability_rule", True),
+            "include_coverage_rule": params.get("include_coverage_rule", True),
         }
-
-        if field_type == "quantitative":
-            kwargs.update(
-                include_specifications=params.get("include_specifications", True),
-                include_exclusions=params.get("include_exclusions", True),
-                include_source_guides=params.get("include_source_guides", True),
-            )
-        else:
-            kwargs.update(include_source_guides=params.get("include_source_guides", True))
-
-        content = call_get_prompt("extraction/extract", **kwargs)
-        return content, kwargs
+        return call_get_prompt("extraction/extract", **kwargs), kwargs
 
     if template_name == "Critique":
+        if field_type == "quantitative":
+            params = get_params(scope, ["output_language", "max_characters", "include_specifications", "include_exclusions"])
+            kwargs = {
+                **table_field,
+                "field_type": "quantitative",
+                "output_language": params.get("output_language"),
+                "max_characters": params.get("max_characters"),
+                "include_specifications": params.get("include_specifications", True),
+                "include_exclusions": params.get("include_exclusions", True),
+            }
+            return call_get_prompt("extraction/critique", **kwargs), kwargs
+
         params = get_params(scope, ["output_language", "max_characters"])
-        base = table_field if field_type == "quantitative" else macro_field
         kwargs = {
-            **base,
-            "field_type": field_type,
+            **macro_field,
+            "field_type": "qualitative",
             "output_language": params.get("output_language"),
             "max_characters": params.get("max_characters"),
         }
-        content = call_get_prompt("extraction/critique", **kwargs)
-        return content, kwargs
+        return call_get_prompt("extraction/critique", **kwargs), kwargs
 
     if template_name == "Summarize":
         params = get_params(scope, ["include_judgment", "max_characters"])
@@ -512,8 +541,7 @@ def build_prompt(template_name: str, field_type: str | None) -> tuple[str, dict]
             "include_judgment": params.get("include_judgment", True),
             "max_characters": params.get("max_characters"),
         }
-        content = call_get_prompt("extraction/summarize", **kwargs)
-        return content, kwargs
+        return call_get_prompt("extraction/summarize", **kwargs), kwargs
 
     if template_name == "Evaluate":
         params = get_params(scope, ["premise_id", "output_language", "max_characters"])
@@ -523,8 +551,7 @@ def build_prompt(template_name: str, field_type: str | None) -> tuple[str, dict]
             "output_language": params.get("output_language"),
             "max_characters": params.get("max_characters"),
         }
-        content = call_get_prompt("evaluation/evaluate", **kwargs)
-        return content, kwargs
+        return call_get_prompt("evaluation/evaluate", **kwargs), kwargs
 
     if template_name == "Consolidate":
         params = get_params(scope, ["output_language", "max_characters"])
@@ -533,14 +560,12 @@ def build_prompt(template_name: str, field_type: str | None) -> tuple[str, dict]
             "output_language": params.get("output_language"),
             "max_characters": params.get("max_characters"),
         }
-        content = call_get_prompt("evaluation/consolidate", **kwargs)
-        return content, kwargs
+        return call_get_prompt("evaluation/consolidate", **kwargs), kwargs
 
     if template_name == "User • Common":
         params = get_params(scope, ["user_type"])
         kwargs = {"user_type": params.get("user_type", "extract")}
-        content = call_get_prompt("common/user", **kwargs)
-        return content, kwargs
+        return call_get_prompt("common/user", **kwargs), kwargs
 
     raise ValueError(f"Unsupported template: {template_name}")
 
@@ -555,9 +580,8 @@ content, used_kwargs = build_prompt(selected_template, selected_field_type)
 html = md_to_html(content)
 
 
-# ----------------------------
 # UI
-# ----------------------------
+# ---------------------------------------------------------------------------------------------------------------
 def chip_value(v):
     if v is None:
         return "No limit"
@@ -576,7 +600,12 @@ for k in [
     "include_judgment",
     "include_specifications",
     "include_exclusions",
+    "include_synonyms",
     "include_source_guides",
+    "include_normalization",
+    "include_extraction_elements",
+    "include_traceability_rule",
+    "include_coverage_rule",
     "user_type",
 ]:
     if k in used_kwargs:
@@ -598,15 +627,27 @@ st.markdown(
 
 top_left, top_right = st.columns([3, 1])
 
-st.markdown(
-    """
-    <div class="card">
-      <div class="card-title">Preview</div>
-      <div class="card-note">Use the sidebar to switch templates and filter by field type where applicable.</div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+with top_left:
+    st.markdown(
+        """
+        <div class="card">
+          <div class="card-title">Preview</div>
+          <div class="card-note">Use the sidebar to switch templates and filter by field type where applicable.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with top_right:
+    st.markdown(
+        """
+        <div class="card">
+          <div class="card-title">Status</div>
+          <div class="card-note">The prompt below reflects the current configuration.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 st.divider()
 

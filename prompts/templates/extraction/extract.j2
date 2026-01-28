@@ -72,13 +72,21 @@ compliant with the defined requirements, rules, and guidelines.
 {% endif %}
 
 {% if field_type == "quantitative" %}
+
+{% if include_synonyms | default(true) %}
 ## Explicit synonyms to detect
 {{ synonyms | default("N/A") | trim }}
+{% endif  %}
+
 {% endif %}
 
 {% else %}
+
+{% if include_extraction_elements | default(true) %}
 ## Extraction elements
 {{ extract_parameters | default("N/A") | trim }}
+{% endif %}
+
 {% endif %}
 {# =========================
 
@@ -102,6 +110,7 @@ compliant with the defined requirements, rules, and guidelines.
 
 ======================== #}
 {% if field_type == "quantitative" %}
+{% if include_normalization | default(true) %}
 ## Normalization rules
 For every numeric magnitude found in the text, extract two fields: `value` and `unit`.  
 The **scale** (`k`, `M`, `B`, `thousand`, `million(s)`, `bn`, `pp`, `pb`, `bps`, etc.) **must not be returned**; it is used only to normalize the `value`.
@@ -130,18 +139,25 @@ The **scale** (`k`, `M`, `B`, `thousand`, `million(s)`, `bn`, `pp`, `pb`, `bps`,
 - 6 weeks: value 0.11538, unit "years"
 - 90 days: value 0.24658, unit "years"
 - 48 hours: value 0.00548, unit "years"
+{% endif %}
+
 {% else %}
+{% if include_traceability_rule | default(true) %}
 ## Traceability rule:
   - **Replace ambiguous or imprecise statements with verifiable facts, data, and figures**; if a detail cannot be supported by observable or documented evidence, omit it.
   - **Prioritize measurable and attributable content** (what happened, who is affected, how much, when, and under what conditions) without forcing a rigid template, use only elements substantiated by the available evidence.
   - **Do not infer, fill in, or extrapolate unavailable data** (e.g., amounts, timelines, counterparties, terms, impacts); if a relevant data point is missing, state it as "**not specified**" and limit the output to what is explicitly supported.
   - **Avoid generic or filler language**; use clear, specific, data-driven and evidence-based phrasing (facts, metrics, and quantified claims where possible), and ensure each sentence adds meaningful technical content.
   - **If the evidence does not allow precise description, explicitly state the limitation** and list the missing information (e.g., scope, amounts/percentages/units, timeline/status, terms, quantified impact).
+{% endif %}
 
+{% if include_coverage_rule | default(true) %}
 ## Coverage rule:
   - **Include favorable and unfavorable findings** with the same level of detail, visibility, and traceability.
   - **Explicitly document frictions**, uncertainties, dependencies, and constraints when evidenced and avoid assumptions.
   - **Where messages are mixed or contradictory, present each version separately and attribute it to its corresponding evidence**; do not reconcile, interpret, or apply value judgment.
+{% endif %}
+
 {% endif %}
 {# =========================
 
@@ -173,19 +189,34 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 
 - Always select the figure associated with the **most recent reporting/closing date** shown in the chunks. If multiple closing dates are provided, use the **latest year-end closing date within the document** for the **reported period**.
 - **Resolve conflicts** using **non-temporal priorities** (e.g., *consolidated vs. standalone*, *total vs. breakdown*) according to the field's guidance.
+{% if include_normalization | default(true) %}
 - **Normalize** extracted values following the provided **normalization rules**.
+{% endif %}
 - **Provide detailed evidence** for each extracted value, including the **relevant text snippet** (`text`) with its **identifier** (`chunk_id`), the **document name** (`chunk_document`), and the **page number** (`chunk_page`).
+{% if include_synonyms | default(true) %}
 - **Identify** **synonyms** (`synonyms_found`) or related terms tied to the field's definition.
+{% endif %}
 - **Justify** (`justification`) each extracted value by explicitly explaining why the cited text snippet supports and matches the target value.
+
 {% else %}
 ## Task instructions
-**Use only the provided chunks as your source of truth**, and do **not** use external knowledge, web browsing, prior conversation context, or assumptions; 
-**strictly adhere to the Traceability and Coverage rules throughout the entire extraction and synthesis**.
+**Use only the provided chunks as your source of truth**, and do **not** use external knowledge, web browsing, prior conversation context, or assumptions.
+
+{% if include_traceability_rule | default(true) and include_coverage_rule | default(true) %}
+**Strictly adhere to the Traceability and Coverage rules throughout the entire extraction and synthesis**.
+{% elif include_traceability_rule | default(true) %}
+**Strictly adhere to the Traceability rule throughout the entire extraction and synthesis**.
+{% elif include_coverage_rule | default(true) %}
+**Strictly adhere to the Coverage rule throughout the entire extraction and synthesis**.
+{% endif %}
+
 
 In the following steps, **reason internally step-by-step** to ensure accuracy, but do not disclose your intermediate reasoning. Provide only the required outputs and evidence.
 
-- **Identify candidate text sections** within the provided chunks that match the field's operational definition
+- **Identify candidate text sections** within the provided chunks that match the field's operational definition.
+{% if include_source_guides | default(true) %}
 - **Prioritize information from the suggested sources**, giving preference to primary sources over secondary sources.
+{% endif %}
 - **Filter and validate candidate chunks** using the specified field criteria and extraction elements.
 - When contradictory values exist, **report each version separately and attribute it to its supporting evidence**. You may rank them by priority (most recent, most specific with unit/period, most reliable source) without removing any.
 - **Consolidate repeated data into a single mention**, keeping the most recent and most complete version unless there is a meaningful conflict or nuance.
@@ -218,6 +249,10 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 {% if field_type == "qualitative" %}
 ## Output size constraint
 - Ensure the principal output (`value`) does not exceed {{ max_characters | default("5000") }} characters. **Prioritize data, facts, and concrete figures**; 
+  do not include unfounded narratives.
+{% else %}
+## Output size constraint
+- Ensure the `justification` does not exceed {{ max_characters | default("1000") }} characters. **Prioritize data, facts, and concrete figures**; 
   do not include unfounded narratives.
 {% endif %}
 {# =========================

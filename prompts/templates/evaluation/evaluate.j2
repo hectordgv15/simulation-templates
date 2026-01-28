@@ -59,8 +59,9 @@ and clearly explain which aspects of the provided fields constrain the assessmen
 {{ regulatory_context | default("N/A") }}
 
 ## Objective premise
-{{ objective_premise | default("N/A") }}
-- **Identifier:** {{ premise_id | default("N/A") }}
+{% set objective_premise = ((premises | default({})).get(premise_id) | default({})).get('description') %}
+{{ objective_premise | default("N/A", true) }}
+- **Identifier:** {{ premise_id | default("N/A", true) }}
 
 ## Task instructions
 In the following steps, **reason internally step-by-step** to ensure accuracy, but do not disclose your intermediate reasoning. Provide only the required outputs and evidence.
@@ -87,7 +88,7 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 - Return the response exclusively in **JSON format**.
 
 ## Output size constraint
-- Ensure the `explanation` does not exceed {{ max_characters | default("1000") }} characters. **Prioritize data, facts, and concrete figures**; do not include unfounded narratives.
+- Ensure the `explanation` does not exceed {{ max_characters | default(1000) }} characters. **Prioritize data, facts, and concrete figures**; do not include unfounded narratives.
 
 ## Expected output:
 ```json
