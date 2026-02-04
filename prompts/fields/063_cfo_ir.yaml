@@ -1,6 +1,7 @@
 field_name: Sensitivity of operating cash flow to interest rates
 field_id: "063"
 field_alias: cfo_ir_sensitivity
+field_type: qualitative
 area: Corporate Finance / Financial Risks
 
 operational_definition: |

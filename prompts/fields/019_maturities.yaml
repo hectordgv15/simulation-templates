@@ -1,6 +1,7 @@
 field_name: Debt maturity schedule
 field_id: "019"
 field_alias: debt_maturity_schedule
+field_type: quantitative
 area: Liquidity / refinancing risk associated with debt
 
 operational_definition: |

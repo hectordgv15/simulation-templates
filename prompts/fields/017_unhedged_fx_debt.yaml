@@ -1,6 +1,7 @@
 field_name: Uncovered foreign-currency debt
 field_id: "017"
 field_alias: uncovered_fx_debt
+field_type: quantitative
 area: Foreign-exchange risk associated with debt
 operational_definition: |
   Nominal amount of debt denominated in a foreign currency that remains unhedged at the end of the period, due to the

@@ -1,0 +1,58 @@
+field_name: Interest coverage ratio by currency
+field_id: "021"
+field_alias: fx_interest_coverage
+field_type: quantitative
+area: Currency risk associated with debt
+operational_definition: |
+  Interest coverage ratio disclosed explicitly by the entity in its financial reporting, broken down by currency where the metric 
+  is reported separately for each currency (e.g., in relation to debt or interest expense denominated in different currencies).
+
+retrieval_keywords: |
+  interest coverage ratio by currency, ICR by currency, interest coverage currency breakdown, interest coverage split by currency,
+  interest coverage ratio currency split, interest coverage ratio per currency, interest coverage by currency table, 
+  interest coverage ratio by currency of debt, EBITDA interest coverage by currency, EBIT interest coverage by currency
+
+sources:
+  primary: |
+    - Notes to the financial statements; Borrowings / Loans and borrowings (compliance metrics by currency)
+    - Notes to the financial statements; Financial risk management (market risk / interest-rate risk) (metrics split by currency)
+    - Notes to the financial statements; Capital management / Financing arrangements (interest coverage covenant definitions and values by currency)
+    - Annual report; Risk management / Treasury (Interest coverage metrics by currency)
+
+  secondary: |
+    - Management discussion and analysis (MD&A); Liquidity and capital resources / Financing (covenant metrics and ratios by currency)
+    - Note on financial liabilities and credit facilities
+    - Investor presentation / debt overview (if it explicitly lists interest coverage ratios by currency)
+
+synonyms: |
+  - interest coverage ratio by currency
+  - interest cover by currency
+  - ICR by currency
+  - EBITDA interest cover by currency
+  - EBIT interest cover by currency
+  - interest coverage covenant by currency
+  - DSCR by currency
+
+field_constraints:
+  specifications: |
+    - Extract only ratios explicitly presented per currency (one ratio value per currency) with the currency clearly indicated in the same row/column/label.
+    - Accept ratios labeled "interest coverage", "interest cover", "ICR", or a clearly defined equivalent metric stated as a ratio.
+    - If ratios are facility-specific and currencies map to facilities, extract only when the currency is explicitly stated alongside the ratio (not inferred from facility currency).
+    - Preserve the ratio exactly as stated (including decimals, "x", "times", or ratio format) and keep the reporting date/period context when provided.
+    - If the disclosure presents a table by currency with multiple columns (e.g., requirement, actual), extract the "actual" (or equivalent) ratio value per currency when explicitly labeled.
+
+  exclusions: |
+    - Do not calculate any ratio from EBITDA/EBIT/interest expense, net finance costs, or any other components.
+    - Do not infer currency assignment from segment, geography, lender, facility name, or debt currency unless the ratio row/column explicitly states the currency.
+    - Do not extract ratios that are not interest coverage (e.g., leverage ratios, net debt/EBITDA, fixed-charge cover) unless explicitly titled as interest coverage.
+    - Do not use sensitivity, scenario, or pro-forma ratios unless explicitly stated as the reported ratio by currency.
+
+value_expectation:
+  field: 021_fx_interest_coverage
+  value:
+    - currency: USD|EUR|GBP|JPY|etc.
+      unit: "times"
+      value: "4.2"
+    - currency: USD|EUR|GBP|JPY|etc.
+      unit: "times"
+      value: "3.8"

@@ -20,7 +20,6 @@ evaluation_info = load_yaml(Path(base_premises) / "question_17.yaml")
 extract_quantitative = PromptOrchestrator.get_prompt(
     "extraction/extract",
     **table_field, 
-    field_type             = "quantitative", 
     output_language        = "es", 
     max_characters         = None, 
     include_specifications = True, 
@@ -33,7 +32,6 @@ extract_quantitative = PromptOrchestrator.get_prompt(
 critique_quantitative = PromptOrchestrator.get_prompt(
     "extraction/critique",
     **table_field,
-    field_type             = "quantitative",
     output_language        = "es",
     max_characters         = 1000,
     include_specifications = True,
@@ -51,7 +49,6 @@ summary_prompt = PromptOrchestrator.get_prompt(
 extract_qualitative = PromptOrchestrator.get_prompt(
     "extraction/extract",
     **macro_field,
-    field_type                  = "qualitative",
     output_language             = "es",
     max_characters              = 5000,
     include_source_guides       = True,

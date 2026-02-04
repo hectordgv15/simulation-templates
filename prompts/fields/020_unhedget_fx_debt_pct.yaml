@@ -1,0 +1,60 @@
+field_name: Percentage of unhedged foreign-currency debt
+field_id: "020"
+field_alias: unhedged_fx_debt_pct
+field_type: quantitative
+area: Currency risk associated with debt
+operational_definition: |
+  Percentage explicitly disclosed by the company at period-end representing the share of debt denominated in foreign
+  currencies that remains unhedged / uncovered against exchange-rate risk, as stated in the financial statements or
+  accompanying risk disclosures.
+
+retrieval_keywords: |
+  percentage of unhedged foreign currency debt, percent of unhedged FX debt, share of unhedged foreign-currency borrowings,
+  uncovered foreign currency debt percentage, unhedged portion of foreign currency debt, FX debt not hedged (%),
+  foreign currency debt hedge coverage (%), hedged vs unhedged foreign currency debt (%),
+  foreign currency borrowings hedged vs unhedged (%), debt in foreign currency unhedged (%),
+  unhedged foreign currency loans (%), unhedged foreign currency debt ratio (%), uncovered FX debt share (%)
+
+sources:
+  primary: |
+    - Notes to the financial statements; Financial risk management (foreign-exchange risk / market risk) (tables showing hedged vs unhedged debt %)
+    - Notes to the financial statements; Loans and borrowings / Borrowings (foreign-currency debt breakdown and hedge coverage percentages)
+    - Notes to the financial statements; Financial instruments and hedging / Derivatives / Hedge accounting (foreign-currency debt hedging coverage)
+    - Annual report; Risk management (market risk / foreign-exchange risk) (FX debt hedging coverage and unhedged share)
+
+  secondary: |
+    - Management discussion and analysis (MD&A); Principal risks / Financial risks (FX debt hedge coverage and unhedged percentage)
+    - Risk report; Treasury / Funding (foreign-currency borrowings hedging coverage)
+    - Note or appendix on foreign-exchange exposure / currency risk (debt exposure tables including % unhedged / % uncovered)
+    - Note on capital structure / financing activities (explicit % of foreign-currency debt unhedged)
+
+synonyms: |
+  - percentage of unhedged foreign-currency debt
+  - percent of uncovered foreign-currency debt
+  - unhedged share of foreign-currency borrowings
+  - foreign-currency debt not hedged (%)
+  - unhedged FX debt percentage
+  - uncovered FX borrowings share (%)
+
+field_constraints:
+  specifications: |
+    - Extract only a percentage explicitly labeled as "unhedged", "uncovered", "not hedged", or "without hedging" for foreign-currency debt.
+    - Accept only if the disclosure explicitly links the percentage to "debt", "borrowings", or "loans" denominated in foreign currency.
+    - If both "hedged %" and "unhedged/uncovered %" are presented for foreign-currency debt, extract the explicitly stated unhedged/uncovered percentage.
+    - If presented in a table, extract the cell corresponding to "debt/borrowings" and "unhedged/uncovered" at period-end.
+    - If multiple percentages exist (by currency and total), extract the explicit total unhedged percentage; do not aggregate currency lines.
+    - Preserve the percentage exactly as stated (including decimals) and keep the period-end context when stated alongside the figure.
+
+  exclusions: |
+    - Do not infer the unhedged percentage from hedge coverage %, hedged %, or any complementary ratio (no subtraction or transformation).
+    - Do not use percentages related to forecast transactions, revenues, costs, net investments, cash flows, or balance-sheet items other than debt.
+    - Do not include qualitative coverage statements without an explicit percentage.
+    - Do not include sensitivity analyses, stress tests, VaR outputs, or percentage impacts on profit/equity from exchange-rate movements.
+    - Do not include percentages related to derivative notionals, fair values, or hedge effectiveness unless explicitly stated as the share of foreign-currency debt that is unhedged/uncovered.
+
+value_expectation:
+  field: 020_pct_uncovered_fx_debt
+  value:
+    unit: "pct"
+    value: 35.0
+

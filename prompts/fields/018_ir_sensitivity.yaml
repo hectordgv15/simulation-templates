@@ -1,6 +1,7 @@
 field_name: Interest rate sensitivity
 field_id: "018"
 field_alias: ir_sensitivity
+field_type: quantitative
 area: Interest-rate risk associated with debt
 
 operational_definition: |

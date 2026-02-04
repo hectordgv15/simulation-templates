@@ -119,6 +119,7 @@ The **scale** (`k`, `M`, `B`, `thousand`, `million(s)`, `bn`, `pp`, `pb`, `bps`,
 - **Monetary:** convert any scale to the base unit, and set `unit` to the currency code (EUR, USD, GBP, etc.).  
 - **Percentages / pp / pb (bps):** convert everything to percentage, and set `unit` to exactly `"percent"`. Equivalences: `1 pp = 1 percent` and `1 pb (bps) = 0.01 percent`.  
 - **Durations:** convert everything to years, and set `unit` to exactly `"years"`. Conversions: `months/12`, `weeks/52`, `days/365`, `hours/(365*24)`.
+- **Ratios (times / veces / x):** when the magnitude represents a multiplicative ratio (e.g., `x`, `X`, `times`, `veces`, `×`), extract the numeric part as `value` and set `unit` to exactly `"times"`.
 
 ### Examples
 #### Monetary
@@ -139,6 +140,13 @@ The **scale** (`k`, `M`, `B`, `thousand`, `million(s)`, `bn`, `pp`, `pb`, `bps`,
 - 6 weeks: value 0.11538, unit "years"
 - 90 days: value 0.24658, unit "years"
 - 48 hours: value 0.00548, unit "years"
+
+#### Ratios
+- 3x: value 3, unit "times"
+- 4.5 times: value 4.5, unit "times"
+- 2X: value 2, unit "times"
+- 5 veces: value 5, unit "times"
+
 {% endif %}
 
 {% else %}
