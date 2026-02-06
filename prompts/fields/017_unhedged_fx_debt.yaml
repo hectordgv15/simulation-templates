@@ -56,6 +56,32 @@ value_expectation:
       value: 54000000
 
 
+{
+  "text_source": [
+    {
+      "text": "Tabla 3. Inversiones: Fondo A, Bono B, Acción C ...",
+      "chunk_id": "chunk_00042",
+      "chunk_document": "doc_2024_Q4_report",
+      "chunk_page": [12]
+    },
+    {
+      "text": "Los importes están expresados en EUR salvo indicación contraria.",
+      "chunk_id": "chunk_00043",
+      "chunk_document": "doc_2024_Q4_report",
+      "chunk_page": [12]
+    }
+  ],
+  "justification": "Se identificó la tabla 'Inversiones' en la página 12. Se tomaron los encabezados exactamente como aparecen y se transcribieron todas las filas visibles, manteniendo celdas vacías como \"\".",
+  "synonyms_found": ["inversión", "posición", "tenencia"],
+  "result_field": {
+    "columns": ["Inversión", "Tipo", "ISIN", "Cantidad", "Precio", "Valor de mercado", "Divisa", "Fecha valoración"],
+    "rows": [
+      ["Fondo Global Equity", "Fondo", "LU1234567890", "1500", "12.34", "18510.00", "EUR", "2024-12-31"],
+      ["Bono Gobierno 2030", "Renta fija", "ES0000012345", "20000", "0.98", "19600.00", "EUR", "2024-12-31"],
+      ["Acción Tech Corp", "Renta variable", "", "75", "210.50", "15787.50", "USD", "2024-12-31"]
+    ]
+  }
+}
 
 
 
