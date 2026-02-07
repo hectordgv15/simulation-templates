@@ -50,11 +50,11 @@ compliant with the defined requirements, rules, and guidelines.
 - **Operational definition:** {{ operational_definition | default("N/A") }}
 
 
-{# =========================
+{#- =========================
 
   START QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
 
-======================== #}
+======================== -#}
 {% if field_type == "quantitative" %}
 
 {% if include_specifications | default(true) or include_exclusions | default(true) %}
@@ -112,40 +112,42 @@ compliant with the defined requirements, rules, and guidelines.
 {% if field_type == "quantitative" %}
 {% if include_normalization | default(true) %}
 ## Normalization rules
-For every numeric magnitude found in the text, extract two fields: `value` and `unit`.  
+Each numerical magnitude must be normalized to the unit. 
 The **scale** (`k`, `M`, `B`, `thousand`, `million(s)`, `bn`, `pp`, `pb`, `bps`, etc.) **must not be returned**; it is used only to normalize the `value`.
 
 ### Normalization guidelines:
-- **Monetary:** convert any scale to the base unit, and set `unit` to the currency code (EUR, USD, GBP, etc.).  
-- **Percentages / pp / pb (bps):** convert everything to percentage, and set `unit` to exactly `"percent"`. Equivalences: `1 pp = 1 percent` and `1 pb (bps) = 0.01 percent`.  
-- **Durations:** convert everything to years, and set `unit` to exactly `"years"`. Conversions: `months/12`, `weeks/52`, `days/365`, `hours/(365*24)`.
-- **Ratios (times / veces / x):** when the magnitude represents a multiplicative ratio (e.g., `x`, `X`, `times`, `veces`, `×`), extract the numeric part as `value` and set `unit` to exactly `"times"`.
+- **Monetary:** convert any scale to the base unit, and set `currency` to the currency code (EUR, USD, GBP, etc.).  
+- **Percentages / pp / pb (bps):** convert everything to percentage, and set `unit` to exactly `"pct"`. Equivalences: `1 pp = 1 percent` and `1 pb (bps) = 0.01 percent`.  
+- **Durations:** convert everything to years, and set `unit` to exactly `"yrs"`. Conversions: `months/12`, `weeks/52`, `days/365`, `hours/(365*24)`.
+- **Ratios (times / veces / x):** when the magnitude represents a multiplicative ratio (e.g., `x`, `X`, `times`, `veces`, `×`), extract the numeric part as `value` and set `unit` to exactly `"x"`.
+
+For every numeric magnitude, extract three fields: `value`, `unit`, and `currency`. If it is not a currency, the `currency` field should be left empty.
 
 ### Examples
 #### Monetary
-- 6M EUR: value 6000000, unit EUR
-- €2.5k: value 2500, unit EUR
-- USD 1.2B: value 1200000000, unit USD
-- 3 million GBP: value 3000000, unit GBP
+- 6M EUR: value 6000000, currency EUR
+- €2.5k: value 2500, currency EUR
+- USD 1.2B: value 1200000000, currency USD
+- 3 million GBP: value 3000000, currency GBP
 
 #### Percentages / pp / pb
-- 2.3%: value 2.3, unit "percent"
-- 0.25 pp: value 0.25, unit "percent"
-- 25 pb / 25 bps: value 0.25, unit "percent"
-- 0.25 pb: value 0.0025, unit "percent"
+- 2.3%: value 2.3, unit "pct"
+- 0.25 pp: value 0.25, unit "pct"
+- 25 pb / 25 bps: value 0.25, unit "pct"
+- 0.25 pb: value 0.0025, unit "pct"
 
 #### Durations
-- 2y: value 2, unit "years"
-- 18 months: value 1.5, unit "years"
-- 6 weeks: value 0.11538, unit "years"
-- 90 days: value 0.24658, unit "years"
-- 48 hours: value 0.00548, unit "years"
+- 2y: value 2, unit "yrs"
+- 18 months: value 1.5, unit "yrs"
+- 6 weeks: value 0.11538, unit "yrs"
+- 90 days: value 0.24658, unit "yrs"
+- 48 hours: value 0.00548, unit "yrs"
 
 #### Ratios
-- 3x: value 3, unit "times"
-- 4.5 times: value 4.5, unit "times"
-- 2X: value 2, unit "times"
-- 5 veces: value 5, unit "times"
+- 3x: value 3, unit "x"
+- 4.5 times: value 4.5, unit "x"
+- 2X: value 2, unit "x"
+- 5 veces: value 5, unit "x"
 
 {% endif %}
 
@@ -186,8 +188,7 @@ The **scale** (`k`, `M`, `B`, `thousand`, `million(s)`, `bn`, `pp`, `pb`, `bps`,
 In the following steps, **reason internally step-by-step** to ensure accuracy, but do not disclose your intermediate reasoning. Provide only the required outputs and evidence.
 
 - **Identify** candidate values in the provided chunks that match the field's **operational definition**.
-
-{% if include_source_guides | default(true) %}
+{%- if include_source_guides | default(true) -%}
 - **Prioritize** information from the **suggested sources**, giving preference to **primary** sources over **secondary** ones.
 {% endif %}
 
@@ -201,9 +202,7 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 - **Normalize** extracted values following the provided **normalization rules**.
 {% endif %}
 - **Provide detailed evidence** for each extracted value, including the **relevant text snippet** (`text`) with its **identifier** (`chunk_id`), the **document name** (`chunk_document`), and the **page number** (`chunk_page`).
-{% if include_synonyms | default(true) %}
 - **Identify** **synonyms** (`synonyms_found`) or related terms tied to the field's definition.
-{% endif %}
 - **Justify** (`justification`) each extracted value by explicitly explaining why the cited text snippet supports and matches the target value.
 
 {% else %}
@@ -269,10 +268,17 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 
 ======================== #}
 
-{% if value_expectation is defined and value_expectation %}
-## Example of expected output:
+{% if expected_output_found is defined and expected_output_found %}
+## Expected output found:
 ```json
-{{ value_expectation | tojson }}
+{{ expected_output_found | tojson(indent=2) }}
+```
+{% endif %}
+
+{% if expected_output_not_found is defined and expected_output_not_found %}
+## Expected output not found:
+```json
+{{ expected_output_not_found | tojson(indent=2) }}
 ```
 {% endif %}
 

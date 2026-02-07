@@ -14,8 +14,7 @@ You will receive a JSON extraction for a specific financial field with the follo
 
 ```json
 {
-  "field": "str",
-  "value": "dict",
+  "result_field": "dict",
   "text_source": {
     "text": "str",
     "chunk_document": "str",
@@ -26,8 +25,7 @@ You will receive a JSON extraction for a specific financial field with the follo
   "justification": "str"
 }
 ```
-- **field**: Fixed identifier of the attribute being reported.
-- **value**: Dictionary containing the extracted values for the attribute (internal structure may vary by field).
+- **result_field**: Dictionary containing the extracted values for the attribute (internal structure may vary by field).
 - **text_source**: Evidence and traceability metadata for the extraction:
   - **text**: Verbatim excerpt from the cited chunk supporting the extracted information.
   - **chunk_document**: Source document name or reference.
@@ -60,11 +58,11 @@ Do not use external knowledge, assumptions, or unstated inferences.
 - **Area**: {{ area | default("N/A") }}
 - **Operational definition**: {{ operational_definition | default("N/A") }}
 
-{# =========================
+{#- =========================
 
   START QUANTITATIVE vs. NON-QUANTITATIVE CONDITIONAL
 
-======================== #}
+======================== -#}
 {% if field_type == "quantitative" %}
 {% if include_specifications | default(true) or include_exclusions | default(true) %}
 ### Field rules

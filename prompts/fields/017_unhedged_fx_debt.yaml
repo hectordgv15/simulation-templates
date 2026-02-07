@@ -49,39 +49,53 @@ field_constraints:
     - Do not include limits, policies, hedge ratios/percentages, or ranges; only the monetary amount of unhedged debt.
 
 # Expected output example
-value_expectation:
-    field: 017_uncovered_fx_debt
-    value:
-      unit: EUR|USD|MXN|COP|etc.
-      value: 54000000
+expected_output_found:
+  text_source:
+    - text: "Unhedged foreign-currency debt at year-end amounted to EUR 54.0 million ..."
+      chunk_id: "chunk_12"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [14, 15]
+    - text: "Uncovered foreign-currency debt (without hedging) at year-end: EUR 54.0 million ..."
+      chunk_id: "chunk_13"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [13]
+  justification: >
+    El texto identifica explícitamente deuda en moneda extranjera sin cobertura al cierre. Se extrae el importe reportado...
+  synonyms_found:
+    - "unhedged foreign-currency debt"
+    - "uncovered foreign-currency debt"
+    - "..."
+  result_field:
+    value: 54000000
+    unit: null
+    currency: "EUR"
+
+expected_output_not_found:
+  text_source:
+    - text: "At year-end, the net foreign currency exposure amounted to EUR 54.0 million ..."
+      chunk_id: "chunk_88"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [88, 89]
+    - text: "Foreign exchange sensitivity: a 10% strengthening ... would impact profit ... by EUR 1.2 million."
+      chunk_id: "chunk_89"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [57]
+  justification: >
+    Se hallan exposición FX y sensibilidad, pero no se identifica explícitamente deuda sin cobertura (unhedged/uncovered/without hedging)...
+  synonyms_found:
+    - "foreign currency exposure"
+    - "foreign exchange sensitivity"
+    - "..."
+  result_field:
+    value: null
+    unit: null
+    currency: null
 
 
-{
-  "text_source": [
-    {
-      "text": "Tabla 3. Inversiones: Fondo A, Bono B, Acción C ...",
-      "chunk_id": "chunk_00042",
-      "chunk_document": "doc_2024_Q4_report",
-      "chunk_page": [12]
-    },
-    {
-      "text": "Los importes están expresados en EUR salvo indicación contraria.",
-      "chunk_id": "chunk_00043",
-      "chunk_document": "doc_2024_Q4_report",
-      "chunk_page": [12]
-    }
-  ],
-  "justification": "Se identificó la tabla 'Inversiones' en la página 12. Se tomaron los encabezados exactamente como aparecen y se transcribieron todas las filas visibles, manteniendo celdas vacías como \"\".",
-  "synonyms_found": ["inversión", "posición", "tenencia"],
-  "result_field": {
-    "columns": ["Inversión", "Tipo", "ISIN", "Cantidad", "Precio", "Valor de mercado", "Divisa", "Fecha valoración"],
-    "rows": [
-      ["Fondo Global Equity", "Fondo", "LU1234567890", "1500", "12.34", "18510.00", "EUR", "2024-12-31"],
-      ["Bono Gobierno 2030", "Renta fija", "ES0000012345", "20000", "0.98", "19600.00", "EUR", "2024-12-31"],
-      ["Acción Tech Corp", "Renta variable", "", "75", "210.50", "15787.50", "USD", "2024-12-31"]
-    ]
-  }
-}
+
+      
+
+
 
 
 

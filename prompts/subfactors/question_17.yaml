@@ -1,6 +1,8 @@
-question: "17"
-title: "Strategic Planning Process"
+question_name: "Strategic Planning Process"
+question_id: "17"
+question_alias: strategic_planning_process
 scoring_levels: 5
+
 regulatory_context: |
   This assessment evaluates the strength of the strategic planning process, focusing on how clearly it is defined, how effectively 
   it is conducted, and how broadly it is applied across key business units. It also reviews the quality of deliverables such as a 

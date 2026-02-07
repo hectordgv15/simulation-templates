@@ -51,12 +51,51 @@ field_constraints:
     - Non-monetary metrics or items without a direct profit or loss effect: VaR, duration, gap, EVE/EV, limits, policies, hedge ratios, ranges.
     - Derivative amounts (fair value or notional) unless explicitly identified as the P&L impact of the shock.
 
-value_expectation:
-  field: ir_sensitivity
-  value:
-    ir_stress_value:
-      unit: "%"
-      value: 25
-    ir_stress_pl:
-      currency: "EUR|USD|MXN|COP|etc."
-      value: -21000000
+# Expected output example
+expected_output_found:
+  text_source:
+    - text: "A parallel upward shift of +25 bps would decrease profit or loss by EUR 21.0 million ..."
+      chunk_id: "chunk_57"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [95, 96]
+    - text: "Market risk – interest rate risk: sensitivity (P&L) for +25 bps: (EUR 21.0 million) ..."
+      chunk_id: "chunk_12"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [140]
+  justification: >
+    Se toma el escenario positivo (+) del análisis de sensibilidad de tipos y su impacto en P&L.
+    Se registran ambos componentes (shock y efecto monetario) y se excluye equity/OCI...
+  synonyms_found:
+    - "interest rate sensitivity"
+    - "profit or loss"
+    - "bps"
+    - "..."
+  result_field:
+    columns: ["metric", "value", "unit", "currency"]
+    rows:
+      - ["ir_stress_value", "25", "pct", ""]
+      - ["ir_stress_pl", "-21000000", "", "EUR"]
+
+# Expected output example
+expected_output_not_found:
+  text_source:
+    - text: "The Group manages interest rate risk through funding diversification and hedging strategies ..."
+      chunk_id: "chunk_90"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [101, 102]
+    - text: "Interest rate risk is monitored using limits and duration/gap measures; no P&L sensitivity table is presented ..."
+      chunk_id: "chunk_91"
+      chunk_document: "Annual Report 2023.pdf"
+      chunk_page: [106]
+  justification: >
+    Se menciona riesgo de tipo de interés y métricas/gestión, pero no se reporta un escenario positivo (+X bps / +Y%)
+    con su impacto monetario en profit or loss (P&L). Por tanto no es posible completar la tabla requerida...
+  synonyms_found:
+    - "interest rate risk"
+    - "hedging"
+    - "..."
+  result_field:
+    columns: null
+    rows: null
+
+

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict
+import re
 
 import frontmatter
 from jinja2 import (
@@ -40,7 +41,11 @@ class PromptOrchestrator:
             cls._env = Environment(
                 loader = FileSystemLoader(templates_path),
                 undefined = StrictUndefined,
+                trim_blocks = True, # New parameters
+                lstrip_blocks = True,
             )
+            
+            cls._env.policies["json.dumps_kwargs"] = {"ensure_ascii": False} # To render non-ASCII characters properly in JSON outputs
 
         return cls._env
 
@@ -89,7 +94,12 @@ class PromptOrchestrator:
         jinja_template = env.from_string(post.content)
 
         try:
-            return jinja_template.render(**kwargs)
+            rendered = jinja_template.render(**kwargs)
+            
+            rendered = re.sub(r"\n{3,}", "\n\n", rendered) # Collapse multiple newlines into a maximum of two
+            
+            return rendered
+        
         except TemplateError as e:
             raise ValueError(
                 f"Error rendering template '{template_name}': {e}"

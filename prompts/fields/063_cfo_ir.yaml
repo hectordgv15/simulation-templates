@@ -43,7 +43,7 @@ extract_parameters: |
     - **Asymmetries/thresholds:** rules such as "up to X%", "above Y", bands, regulatory limits, or contractual step-ups.
 
 # Expected output example
-value_expectation:
+expected_output_found:
   value:
     value: "str"
   text_source:
