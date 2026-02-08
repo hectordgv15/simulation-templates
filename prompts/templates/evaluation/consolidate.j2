@@ -16,11 +16,11 @@ The input structure is as follows:
 
 ```json
   [
-    { "premise_id": "string",
+    {
       "answer": "string",
       "explanation": "string"
     },
-    { "premise_id": "string",
+    {
       "answer": "string",
       "explanation": "string"
     },
@@ -29,12 +29,11 @@ The input structure is as follows:
 ```
 
 - Each field contains:
-  - `premise_id`: a unique identifier for the premise or condition being evaluated.
   - `answer`: the compliance rating assigned to the premise.
   - `explanation`: the justification for the assigned rating.
 
 ## Task
-Your objective is to **assign the final assessment for the subfactor {{ title | default("N/A") }}**, **strictly applying Standard & Poor's 
+Your objective is to **assign the final assessment for the subfactor {{ question_name | default("N/A") }}**, **strictly applying Standard & Poor's 
 scoring guidelines** and using **only** the previously resolved ratings `answer` and rationales `explanation` for the set of premises. 
 The final rationale must be a **faithful synthesis** of the rationales already provided, prioritizing **key facts and quantitative evidence**.
 
@@ -110,7 +109,7 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 ## Expected output:
 ```json
   {
-    "answer"      : str, // Final assessment for the subfactor {{ title | default("N/A") }}
+    "answer"      : str, // Final assessment for the subfactor {{ question_name | default("N/A") }}
     "explanation" : str  // Justification based on the premises' explanation and Standard & Poor's guidelines
   }
 ```

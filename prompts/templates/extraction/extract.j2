@@ -183,12 +183,13 @@ For every numeric magnitude, extract three fields: `value`, `unit`, and `currenc
 ======================== #}
 {% if field_type == "quantitative" %}
 ## Task instructions
-**Use only the provided chunks as your source of truth.** Do **not** use external knowledge, web browsing, prior conversation context or assumptions. If information is not present in the chunks, return **`null`**.
+**Use only the provided chunks as your source of truth.** Do **not** use external knowledge, web browsing, prior conversation context or assumptions. If information is not present in the chunks, the components of the `result_field` must be **`null`**.
 
 In the following steps, **reason internally step-by-step** to ensure accuracy, but do not disclose your intermediate reasoning. Provide only the required outputs and evidence.
 
 - **Identify** candidate values in the provided chunks that match the field's **operational definition**.
-{%- if include_source_guides | default(true) -%}
+
+{% if include_source_guides | default(true) %}
 - **Prioritize** information from the **suggested sources**, giving preference to **primary** sources over **secondary** ones.
 {% endif %}
 
@@ -222,7 +223,9 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 
 - **Identify candidate text sections** within the provided chunks that match the field's operational definition.
 {% if include_source_guides | default(true) %}
+
 - **Prioritize information from the suggested sources**, giving preference to primary sources over secondary sources.
+
 {% endif %}
 - **Filter and validate candidate chunks** using the specified field criteria and extraction elements.
 - When contradictory values exist, **report each version separately and attribute it to its supporting evidence**. You may rank them by priority (most recent, most specific with unit/period, most reliable source) without removing any.
@@ -255,7 +258,7 @@ In the following steps, **reason internally step-by-step** to ensure accuracy, b
 ======================== #}
 {% if field_type == "qualitative" %}
 ## Output size constraint
-- Ensure the principal output (`value`) does not exceed {{ max_characters | default("5000") }} characters. **Prioritize data, facts, and concrete figures**; 
+- Ensure the principal output (`result_field`) does not exceed {{ max_characters | default("5000") }} characters. **Prioritize data, facts, and concrete figures**; 
   do not include unfounded narratives.
 {% else %}
 ## Output size constraint

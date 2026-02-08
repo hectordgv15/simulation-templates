@@ -51,12 +51,12 @@ class OutputStringField(BaseOutputField):
 
 class TableField(BaseModel):
     columns: Optional[List[str]] = Field(
-        default=None,
-        description=(
+        default = None,
+        description = (
             "List of column titles EXACTLY as they appear in the table. "
             "Minimum 1 column when provided. Use empty string '' if applicable."
         ),
-        min_length=1,  # aplica si columns != None
+        min_length = 1,  # aplica si columns != None
     )
 
     rows: Optional[List[List[str]]] = Field(
@@ -115,7 +115,7 @@ class NumericValue(BaseModel):
         description = "The currency code if applicable (e.g., USD, EUR). If missing or null, it is treated as empty string.",
     )
 
-    @field_validator("unit", mode="before")
+    @field_validator("unit", mode = "before")
     def unit_none_to_default(cls, v):
         return 1 if v is None else v
 

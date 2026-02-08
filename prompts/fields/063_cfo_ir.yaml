@@ -44,12 +44,17 @@ extract_parameters: |
 
 # Expected output example
 expected_output_found:
-  value:
-    value: "str"
+  result_field:
+    text: "Sensibilidad moderada del CFO a tipos, principalmente indirecta vía indexación a IPC/HICP y efectos en capital circulante; impacto directo limitado por pass-through regulatorio, además ..."
   text_source:
-    text: "str"
-    chunk_document: "str"
-    chunk_id: "str"
-    chunk_page: []
-  synonyms_found: []
-  justification: "str"
+    - text: "Regulated revenues are indexed to CPI (HICP) with an annual adjustment and a lag; true-up mechanism applies and ..."
+      chunk_id: "chunk_000812"
+      chunk_document: "AnnualReport_2024_EN"
+      chunk_page: [132]
+  justification: "Se infiere sensibilidad indirecta (indexación IPC/HICP) y limitada directa (pass-through regulatorio) ..."
+  synonyms_found:
+    - "sensibilidad a tipos de interés"
+    - "IPC/HICP"
+    - "pass-through"
+    - "capital circulante"
+
