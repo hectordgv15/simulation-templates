@@ -468,3 +468,87 @@ def show_output(data):
                 print(x.get("text", ""))
         else:
             print(ts)
+
+
+import json, html
+import pandas as pd
+
+try:
+    from IPython.display import display, HTML
+except ImportError:
+    display = None
+
+
+def show_output(data):
+    if isinstance(data, str):
+        data = json.loads(data)
+    if not isinstance(data, dict):
+        print(data); return
+
+    def show_text(title, text, open=False):
+        text = "" if text is None else str(text)
+        if display:
+            display(HTML(f"""
+            <details{" open" if open else ""} style="margin:.4rem 0;">
+              <summary style="cursor:pointer;font-weight:600;">{html.escape(title)}</summary>
+              <pre style="white-space:pre-wrap;margin:.5rem 0 0 0;">{html.escape(text)}</pre>
+            </details>
+            """))
+        else:
+            print(f"\n== {title} ==\n{text}")
+
+    def show_list(title, items):
+        if items is None: items = []
+        if not isinstance(items, list): items = [items]
+        if display:
+            lis = "".join(f"<li>{html.escape(str(x))}</li>" for x in items)
+            display(HTML(f"<div style='margin:.6rem 0;font-weight:700;'>{html.escape(title)}</div><ul style='margin-top:.2rem'>{lis}</ul>"))
+        else:
+            print(f"\n== {title} ==")
+            for x in items: print(f"- {x}")
+
+    def show_df(df, title=""):
+        if title: print(f"\n== {title} ==")
+        (display(df) if display else print(df.to_string(index=False)))
+
+    # critique
+    if set(data.keys()) == {"is_valid", "confidence", "justification"}:
+        show_df(pd.DataFrame([{"is_valid": data["is_valid"], "confidence": data["confidence"]}]), "critique")
+        show_text("justification", data["justification"])
+        return
+
+    # result_field
+    rf = data.get("result_field")
+    if isinstance(rf, dict):
+        if "columns" in rf and "rows" in rf:
+            show_df(pd.DataFrame(rf["rows"], columns=rf["columns"]), "result_field (tabla)")
+        elif "value" in rf:
+            show_df(pd.DataFrame([rf]), "result_field (numérico)")
+        elif "text" in rf:
+            show_text("result_field (texto)", rf.get("text", ""))
+        else:
+            show_df(pd.DataFrame([rf]), "result_field")
+    elif rf is not None:
+        show_df(pd.DataFrame([{"value": rf}]), "result_field")
+
+    if "justification" in data:
+        show_text("justification", data.get("justification", ""))
+
+    if "synonyms_found" in data:
+        show_list("synonyms_found", data.get("synonyms_found"))
+
+    # text_source (colapsable por chunk)
+    ts = data.get("text_source") or []
+    if isinstance(ts, list) and all(isinstance(x, dict) for x in ts) and ts:
+        if display:
+            display(HTML("<div style='margin:.6rem 0;font-weight:700;'>text_source</div>"))
+        else:
+            print("\n== text_source ==")
+
+        for i, x in enumerate(ts, 1):
+            pages = x.get("chunk_page")
+            pages = ", ".join(map(str, pages)) if isinstance(pages, list) else str(pages)
+            header = f"[{i}] {x.get('chunk_document','')} | {x.get('chunk_id','')} | page(s): {pages}"
+            show_text(header, x.get("text", ""))
+    elif "text_source" in data:
+        show_text("text_source", ts)
